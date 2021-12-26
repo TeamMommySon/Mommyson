@@ -76,9 +76,9 @@ public class OwnerController {
 		MemberDTO members = (MemberDTO)model.getAttribute("loginMember");
 		int memCode = members.getMemCode();
 		
-		Map<String, Object> memberShip = ownerService.selectMembershipInfo(memCode);
+		Map<String, Object> membeship = ownerService.selectMembershipInfo(memCode);
 		
-		if(memberShip != null && !memberShip.isEmpty()) {
+		if(membeship != null && !membeship.isEmpty()) {
 			
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 			
@@ -88,13 +88,13 @@ public class OwnerController {
 			
 			java.util.Date today = sdf.parse(dd);
 			
-			String startDate = sdf.format(memberShip.get("START_DATE"));
-			String endDate = sdf.format(memberShip.get("END_DATE"));
+			String startDate = sdf.format(membeship.get("START_DATE"));
+			String endDate = sdf.format(membeship.get("END_DATE"));
 			
-			memberShip.put("startDate", startDate);
-			memberShip.put("endDate", endDate);
+			membeship.put("startDate", startDate);
+			membeship.put("endDate", endDate);
 			
-			model.addAttribute("membership",memberShip);
+			model.addAttribute("membership",membeship);
 			
 			List<ProductDTO> proList = ownerService.selectProdoucts(memCode);
 			

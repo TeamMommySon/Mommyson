@@ -152,4 +152,6 @@ public interface OwnerDAO {
 
 	public List<Map<String, Object>> selectMonth(String storeName);
 
+	public int removeProductCode(List<Integer> deleteCode);
+
 }

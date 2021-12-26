@@ -661,6 +661,18 @@
 		 </where>
 	</update>
 	
+	<!-- 반찬 삭제 시 할인율도 삭제하는 쿼리문 -->
+	<update id="removeProductCode">
+		UPDATE DC_PRODUCT
+		   SET DC_YN = 'N'
+		<where>
+		 	SD_CODE IN 
+			<foreach collection="list" item="list" separator="," open="(" close=")">
+				#{ list }
+			</foreach>
+		 </where>   
+	</update>
+	
 	<!-- 오늘의 할인의 토탈 수 구하는 쿼리문 -->
 	<select id="selectTotalDC" resultType="_int">
 		SELECT
@@ -1487,6 +1499,7 @@
 						 ORDER BY A.PAYDATE DESC) B 
 						 ) C
 			WHERE C.RNUM BETWEEN 1 AND 5
+			ORDER BY C.PAYDATE
 	</select>
 	
 	<!-- 회원탈퇴 비밀번호 셀렉트 -->

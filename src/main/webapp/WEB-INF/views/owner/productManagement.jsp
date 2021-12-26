@@ -72,6 +72,8 @@
               </tr>
             </thead>
             <tbody>
+            
+            <c:if test="${ !empty productList }">
               <c:forEach var="list" items="${ productList }">
               <c:set var="i" value="${ i + 1 }"/>
               <c:set var="j" value="${ (requestScope.pagination.pageNo / 2) * 10 }"/>
@@ -103,6 +105,14 @@
                 <td><a href="${ pageContext.servletContext.contextPath }/owner/modifyProduct?sdCode=${ list.sdCode }">상세보기</a></td>
               </tr>
               </c:forEach>
+              </c:if>
+              
+              <c:if test="${ empty productList }">
+              <tr>
+              	<td colspan="7" style="font-weight: 700; font-size: 20px; padding-top : 70px;">등록된 상품이 없습니다.</td>
+              </tr>	
+              </c:if>
+              
             </tbody>
           </table>
         </div>
