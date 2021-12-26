@@ -332,7 +332,7 @@ public class UserController {
 
 
 
-			mv.addAttribute("message","파일업로드 성공");
+//			mv.addAttribute("message","파일업로드 성공");
 			if(fileUploadResult == multiFiles.size() ) {
 				System.out.println("정상적으로 파일이 처리됨");
 			} else {
@@ -355,7 +355,7 @@ public class UserController {
 		}
 
 
-		return "user/userCustomerServiceCenterMTMQnADetail";
+		return "redirect:MTMConsult";
 	}
 
 	/**@author 양윤제

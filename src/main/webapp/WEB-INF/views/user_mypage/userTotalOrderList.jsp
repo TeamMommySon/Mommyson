@@ -102,7 +102,7 @@
                   <!-- 아직 소비자가 물건을 받지 못한 상태  -->
                   <h6>수령 대기중</h6>
                   </c:if>
-                  <c:if test="${ (myOrder.completeTime eq null && myOrder.takeTime eq null) && myOrder.cancleTime ne null }">
+                  <c:if test="${ (myOrder.completeTime eq null || myOrder.takeTime eq null) && myOrder.cancleTime ne null }">
                   <!-- 아직 소비자가 물건을 받지 못한 상태  -->
                   <h6>주문취소</h6>
                   </c:if>
