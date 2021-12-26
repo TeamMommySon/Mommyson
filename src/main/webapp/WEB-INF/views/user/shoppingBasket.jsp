@@ -57,9 +57,6 @@
 						        </td>
 						        <td><span id="totalPrice" name="totalPrice"><c:out value="${ row.totalPrice }"/></span>원</td> 
 					      	</tr>
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
 	    				<%-- <tr id="tr2">
 				        <td><input type="checkbox" name="checkbox" value="${ row.totalPrice }"></td>
 				        <td style="display: none"><input type="hidden" id="memCode" name="memCode" value="${ row.memCode }"/></td>
@@ -77,9 +74,6 @@
 				        </td>
 				        <td><span id="totalPrice" name="totalPrice"><c:out value="${ row.totalPrice }"/></span>원</td> 
 				      	</tr> --%>
->>>>>>> 6f67263fa98ef0acdafe2de383f6c2856c4aa142
-=======
->>>>>>> a6d804976bbf1f33133549d277a0677224ee6fde
 				      	</table>
 			    </c:forEach> 
 	    	</c:otherwise>
@@ -184,40 +178,6 @@
 	        
 		});
 	  
-		
-	  
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-  	  /* 주문번호 가지고 결제창으로 이동 */
-  	  /* function gopay(str) {
-  		  let orderList = [];
-  		  let storeCode = [];
-  		  let storeName = [];
-  		  $("input:checkbox[name='checkbox']:checked").each(function() {
-  			  orderList.push($(this).val());
-  			  storeCode.push($(this).parent().next().children().val());
-  			  storeName.push($(this).parent().next().children().parent().next().children().val());
-  	  	
-  		 });
-  		 
-  		  console.log(storeCode);
-  		  
-	  		  if(str == "pack") {
-	  			 console.log(memCode);
-	  			   location.href='${ pageContext.servletContext.contextPath }/user/packagePay?orderList=' + orderList +"&storeCode=" + storeCode  + "&storeName=" + storeName; 
-	  			  return true;
-	  		  } else if(str == "deli") {
-	  			  location.href='${ pageContext.servletContext.contextPath }/user/deliveryPay?orderList=' + orderList +"&storeCode=" +storeCode  + "&storeName=" + storeName;
-	  			  return true;
-	  		  }
-  		  
-  	  } */
-  	  
->>>>>>> 6f67263fa98ef0acdafe2de383f6c2856c4aa142
-=======
->>>>>>> a6d804976bbf1f33133549d277a0677224ee6fde
-
 		function gopay(str) {
 			let orderList = [];
 			let storeCode = [];

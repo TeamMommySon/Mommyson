@@ -32,7 +32,7 @@
                     	$('#searchByDate').on('click',function() {
                     		let startDate = $('#startDate').val();
                     		let endDate = $('#endDate').val();
-                    		if(startDate == null || endDate == null) {
+                    		if(startDate == '' || endDate == '') {
                     			alert("날짜를 지정해주세요.");
                     		} else {
                     			location.href='${ pageContext.servletContext.contextPath }/manager/taxAdjustment?startDate=' + startDate + '&endDate=' + endDate;
@@ -41,7 +41,7 @@
                     </script>
                 </div>
                 <div class="top_box">
-                    <input type="file" webkitdirectory id="excel" value="엑셀변환" style="background-color: #F89E91;">
+                    <input type="button" id="excel" value="엑셀변환" style="background-color: #F89E91;">
                 </div>
             <table class="table board_table">
                 <colgroup>
