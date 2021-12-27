@@ -137,6 +137,9 @@
                     <input type="file" id="insert_img3" name="fileName3" onchange="loadImg(this,3)" accept="image/*">
                 </div>
                 <!-- file area -->
+                <input type="hidden" id="filePath1" value="${ answerImg[0].fileName }">
+                <input type="hidden" id="filePath2" value="${ answerImg[1].fileName }">
+                <input type="hidden" id="filePath3" value="${ answerImg[2].fileName }">
             </form>
         </div>
     </div>

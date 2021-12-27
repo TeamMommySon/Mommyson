@@ -142,9 +142,7 @@
     <script>
 	    $(".click_qa").on('click',function(e){
 	        $(event.currentTarget).next().toggle(300);
-	        
-	        // let show = e.next();
-	        // show.toggle();
+
 	    });
 	    
 	    $("#chk_all").click(function(){
