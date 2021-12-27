@@ -49,7 +49,7 @@
 	       
         </div>
         
-        <c:if test="${ sessionScope.loginMember != null }">
+        <c:if test="${ sessionScope.loginMember != null && sessionScope.loginMember.memType == 'user' }">
         	<div id="cart_logo">
         		<c:if test="${ sessionScope.cartCount != 0 }">
         			<div style="background: #FFF9C2; width: 23px; height: 23px; border-radius: 50%; position: relative; top: 26px; color: black; display: flex; align-items: center; justify-content: center;">

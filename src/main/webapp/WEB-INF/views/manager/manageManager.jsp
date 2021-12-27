@@ -118,30 +118,6 @@
                   <br><br>
                 </div>
             </div>
-            <!-- 페이징 -->
-            <nav class="page_box" aria-label="Page navigation example">
-                <ul class="pagination">
-                  <li class="page-item"><a class="page-link-move" href="#">&laquo;</a></li>
-                  <li class="page-item"><a class="page-link-move" href="#">&lt;</a></li>
-                  <li class="page-item"><a class="page-link-num" href="#">1</a></li>
-                  <li class="page-item"><a class="page-link-num" href="#">2</a></li>
-                  <li class="page-item"><a class="page-link-num" href="#">3</a></li>
-                  <li class="page-item"><a class="page-link-num" href="#">4</a></li>
-                  <li class="page-item"><a class="page-link-num" href="#">5</a></li>
-                  <li class="page-item"><a class="page-link-num" href="#">6</a></li>
-                  <li class="page-item"><a class="page-link-num" href="#">7</a></li>
-                  <li class="page-item"><a class="page-link-num" href="#">8</a></li>
-                  <li class="page-item"><a class="page-link-num" href="#">9</a></li>
-                  <li class="page-item"><a class="page-link-num" href="#">10</a></li>
-                  <li class="page-item"><a class="page-link-move" href="#">&gt;</a></li>
-                  <li class="page-item"><a class="page-link-move" href="#">&raquo;</a></li>
-                </ul>
-                <ul>
-                    <img class="glass" src="${ pageContext.servletContext.contextPath }/resources/images/glass.png">
-                    <input type="text" class="searchtext" placeholder="찾고싶은 게시물의 제목을 입력해주세요"></li>
-                    <button type="submit" class="searchbutton">검색하기</button></li>
-                 </ul>
-              </nav>
         </div>
     </div>
 

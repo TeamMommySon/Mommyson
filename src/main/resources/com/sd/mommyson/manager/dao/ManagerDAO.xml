@@ -934,7 +934,6 @@
 		INTO MANAGER_TBL VALUES(SEQ_MEMBER.currval, NULL, #{ code })
 		SELECT * FROM DUAL
 	</insert>
-	
 	<select id="selectManagerByMemCode" resultType="hashmap">
 		SELECT
 			   A.MEM_CODE

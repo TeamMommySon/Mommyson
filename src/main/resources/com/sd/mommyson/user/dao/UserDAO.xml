@@ -487,17 +487,20 @@
 		     , C.MEM_CODE
 		     , C.STORE_NAME
 		     , C.STORE_IMG
+		     , C.GRADE
 		     , C.COUNT
 	     FROM (SELECT
 		              ROWNUM RNUM
 		            , B.MEM_CODE
 	                , B.STORE_NAME
 	                , B.STORE_IMG 
+	                , B.GRADE
 	                , B.COUNT 
 	            FROM (SELECT
 	                         A.MEM_CODE
 	                       , A.STORE_NAME
 	                       , A.STORE_IMG 
+	                       , A.GRADE
 	                       , (SELECT COUNT(*) FROM REVIEW_TBL R JOIN ORDER_TBL O ON(R.ORDER_CODE = O.ORDER_CODE) WHERE O.STORE_CODE = A.MEM_CODE) AS COUNT
 	                    FROM STORE_TBL A
 	                    LEFT JOIN MEMBER_TBL M ON(A.MEM_CODE = M.MEM_CODE)
@@ -688,6 +691,7 @@
     		 , A.ORDERABLE_STATUS
     	  FROM PRODUCT_TBL A
     	 WHERE A.IS_DELETED = 'N'
+    	   AND A.ORDERABLE_STATUS = 'Y'
     	   AND A.EXPIRY_DATE <![CDATA[ >=  ]]> SYSDATE
     	   AND A.MEM_CODE = #{ memCode }
     </select>

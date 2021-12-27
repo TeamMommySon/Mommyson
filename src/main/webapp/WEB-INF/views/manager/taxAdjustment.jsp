@@ -8,7 +8,7 @@
     <title>사업자 정산</title>
 </head>
 <body>
-	<header class="manager_header at-container">
+   <header class="manager_header at-container">
         <img src="${ pageContext.servletContext.contextPath }/resources/images/managerLogo.png" alt="마미손맛 MANAGEMENT">
         <a href="../main.html" class="home_btn">
             <img src="${ pageContext.servletContext.contextPath }/resources/images/mainHome.png" alt="메인화면으로">
@@ -29,15 +29,15 @@
                     <input type="date" class="calendar" id="endDate">
                     <input type="button" id="searchByDate" class="gray_btn" value="검색">
                     <script>
-                    	$('#searchByDate').on('click',function() {
-                    		let startDate = $('#startDate').val();
-                    		let endDate = $('#endDate').val();
-                    		if(startDate == null || endDate == null) {
-                    			alert("날짜를 지정해주세요.");
-                    		} else {
-                    			location.href='${ pageContext.servletContext.contextPath }/manager/taxAdjustment?startDate=' + startDate + '&endDate=' + endDate;
-                    		}
-                    	});
+                       $('#searchByDate').on('click',function() {
+                          let startDate = $('#startDate').val();
+                          let endDate = $('#endDate').val();
+                          if(startDate == '' || endDate == '') {
+                             alert("날짜를 지정해주세요.");
+                          } else {
+                             location.href='${ pageContext.servletContext.contextPath }/manager/taxAdjustment?startDate=' + startDate + '&endDate=' + endDate;
+                          }
+                       });
                     </script>
                 </div>
                 <div class="top_box">
@@ -88,24 +88,26 @@
                 </tbody>
             </table>
             <script>
-            	$('#excel').on('click',function() {
-            		let codeList = [];
-            		$('input:checkbox[name=ch1]:checked').each(function(index,item) {
-            			codeList.push($(this).val());
-            		})
-            		
-            		$.ajax({
-            			url: '${ pageContext.servletContext.contextPath }/manager/excel',
-            			type: 'post',
-            			data: {
-            				codeList : codeList
-            			},
-            			success: function(data) {
-            				
-            			}
-            		});
-            		
-            	})
+               $('#excel').on('click',function() {
+                  /* let sourceVal = document.getElementById("excel").files[0].path;
+                  console.log(sourceVal); */
+                  let codeList = [];
+                  $('input:checkbox[name=ch1]:checked').each(function(index,item) {
+                     codeList.push($(this).val());
+                  })
+                  
+                  $.ajax({
+                     url: '${ pageContext.servletContext.contextPath }/manager/excel',
+                     type: 'post',
+                     data: {
+                        codeList : codeList
+                     },
+                     success: function(data) {
+                        alert("엑셀 파일이 저장되었습니다.");
+                     }
+                  });
+                  
+               })
             </script>
             <p style="float: right; color: gray">작성일자는 결제일자가 포함된 달의 다음달 10일까지 입니다!</p>
             
@@ -113,14 +115,14 @@
         </div>
     </div>
 
-	<jsp:include page="../commons/footer.jsp"></jsp:include>
-	
+   <jsp:include page="../commons/footer.jsp"></jsp:include>
+   
    <script>
        $("#chk_all").on('click',function(){
          if($('#chk_all').is(':checked') == true) {
-        	 $('input:checkbox').attr('checked',true);
+            $('input:checkbox').attr('checked',true);
          } else {
-        	 $('input:checkbox').attr('checked',false);
+            $('input:checkbox').attr('checked',false);
          }
        });
    </script>
