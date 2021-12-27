@@ -523,8 +523,6 @@ public class ManagerController {
 			pagination = Pagination.getPagination(pageNo, totalCount, limit, buttonAmount, "all", null);
 		}
 
-		//		System.out.println("pagination : " + pagination);
-
 		/* 공지사항 리스트 조회 */
 		List<PostDTO> noticeList = managerService.selectNoticeList(pagination);
 
@@ -812,7 +810,6 @@ public class ManagerController {
 	 */
 	@PostMapping(value = "oftenQuestionWrite")
 	public String oftenQuestionWrite(@ModelAttribute PostDTO post, Model model) {
-		System.out.println("포스트 : " + post);
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("boardCode", post.getBoardCode());
@@ -973,14 +970,23 @@ public class ManagerController {
 		registInfo.put("ansContent",ansContent);
 		registInfo.put("postNo",postNo);
 
+		/* 파일이름이 비어있지 않으면 리스트에 바로 넣어주고, 비어있으면 Null값 넣어줌 */
 		if(fileName1.getOriginalFilename() != "") {
 			imgFiles.add(fileName1);
+		} else {
+			imgFiles.add(null);
 		}
+
 		if(fileName2.getOriginalFilename() != "") {
 			imgFiles.add(fileName2);
+		} else {
+			imgFiles.add(null);
 		}
+
 		if(fileName3.getOriginalFilename() != "") {
 			imgFiles.add(fileName3);
+		} else {
+			imgFiles.add(null);
 		}
 
 		System.out.println("이미지 체크 : " + imgFiles);
@@ -993,39 +999,49 @@ public class ManagerController {
 			mkdir.mkdirs();
 		}
 
+		/* xml에 등록할 파일 맵 */
 		Map<String, Object> registfile = new HashMap<>();
 		registfile.put("postNo",postNo);
 
 		int result = 0;
+		/* 파일이 비어있지않으면 파일 등록하러가기~ */
 		if(!imgFiles.isEmpty()) {
 
 			for(int i = 0; i < imgFiles.size(); i++) {
 
-				System.out.println(i);
-				String originFileName = imgFiles.get(i).getOriginalFilename();
-				String ext = originFileName.substring(originFileName.indexOf("."));
-				String savedName = UUID.randomUUID().toString().replace("-", "") + ext;
+				if(imgFiles.get(i) != null) {
 
-				try {
-					imgFiles.get(i).transferTo(new File(filePath + "/" + savedName));
+					String originFileName = imgFiles.get(i).getOriginalFilename();
+					String ext = originFileName.substring(originFileName.indexOf("."));
+					String savedName = UUID.randomUUID().toString().replace("-", "") + ext;
 
-					String fileName = "resources/uploadFiles/" + savedName;
+					try {
+						imgFiles.get(i).transferTo(new File(filePath + "/" + savedName));
 
-					registfile.put("fileName", fileName);
+						String fileName = "resources/uploadFiles/" + savedName;
+
+						registfile.put("fileName", fileName);
+
+						result = managerService.registBusinessFile(registfile);
+
+
+					} catch (IllegalStateException | IOException e) {
+
+						new File(filePath + "/" + savedName).delete();
+
+						e.printStackTrace();
+					}
+				} else {
+
+					registfile.put("fileName", "none");
 
 					result = managerService.registBusinessFile(registfile);
-
-
-				} catch (IllegalStateException | IOException e) {
-
-					new File(filePath + "/" + savedName).delete();
-
-					e.printStackTrace();
 				}
 
 			}
 		}
 
+		/* 답변 내용 등록하러 가기~ */
 		int result2 = managerService.registBusinessAnswer(registInfo);
 
 		if(result > 0 && result2 > 0) {
@@ -1058,7 +1074,7 @@ public class ManagerController {
 		model.addAttribute("answerFileList", answerFileList);
 
 	}
-	
+
 	/**
 	 * @author junheekim
 	 * @category 사업자 - 1:1 질문 답변 수정(테스트 X)
@@ -1066,20 +1082,33 @@ public class ManagerController {
 	@PostMapping("updateBusinessInquiry")
 	public String updateBusinessInquiry(HttpServletRequest request, HttpSession session, @RequestParam(value = "postNo", required = false) int postNo, @RequestParam(value = "ansContent", required = false) String ansContent, RedirectAttributes ra
 			, @RequestParam(value = "fileName1", required = false) MultipartFile fileName1, @RequestParam(value = "fileName2", required = false) MultipartFile fileName2, @RequestParam(value = "fileName3", required = false) MultipartFile fileName3
-			, @RequestParam(value = "fileCode1", defaultValue = "0") int fileCode1, @RequestParam(value = "fileCode2", defaultValue = "0") int fileCode2, @RequestParam(value = "fileCode3", defaultValue = "0") int fileCode3) {
+			, @RequestParam(value = "fileCode1", defaultValue = "0") int fileCode1, @RequestParam(value = "fileCode2", defaultValue = "0") int fileCode2, @RequestParam(value = "fileCode3", defaultValue = "0") int fileCode3
+			, @RequestParam(value = "filePath1", defaultValue = "") String filePath1, @RequestParam(value = "fileCode2", defaultValue = "") String filePath2, @RequestParam(value = "fileCode2", defaultValue = "") String filePath3) {
 
+		/* 업데이트할 정보들 맵에 저장 */
 		Map<String, Object> updateInfo = new HashMap<>();
-		List<MultipartFile> imgFiles = new ArrayList<MultipartFile>();
 		updateInfo.put("ansContent",ansContent);
 		updateInfo.put("postNo",postNo);
 
+		/* 리스트에 이미지 파일 넣기 */
+		List<MultipartFile> imgFiles = new ArrayList<MultipartFile>();
 		imgFiles.add(fileName1);
 		imgFiles.add(fileName2);
 		imgFiles.add(fileName3);
 
-		System.out.println("이미지 체크 : " + imgFiles);
-		System.out.println("코드 1 : " + fileCode1 + "코드 2 : " + fileCode2 +"코드 3 : " + fileCode3);
+		/* 만약 비어있는 경우 null 값으로 채워주기 */
+		for(MultipartFile m : imgFiles) {
+			if(m.isEmpty()) {
+				m = null;
 
+			}
+		}
+
+		/* 들어온 이미지 리스트 체크, 코드 체크 */
+		System.out.println("이미지 체크 : " + imgFiles);
+		System.out.println("코드 1 : " + fileCode1 + ", 코드 2 : " + fileCode2 +", 코드 3 : " + fileCode3);
+
+		/* 저장할 파일 루트, 폴더 설정 */
 		String root = request.getSession().getServletContext().getRealPath("resources");
 
 		String filePath = root + "/uploadFiles";
@@ -1089,41 +1118,81 @@ public class ManagerController {
 			mkdir.mkdirs();
 		}
 
-
+		/* 파일이 비어져있어도 넘겨줍시다. */
 		int result = 0;
 		if(!imgFiles.isEmpty()) {
-			
+
 			for(int i = 0; i < 3; i++) {
 				Map<String, Object> updateFile = new HashMap<>();
 				updateFile.put("postNo",postNo);
-				
-				System.out.println(imgFiles.get(i).getOriginalFilename() != "" && imgFiles.get(i).getOriginalFilename() != null);
-				
-				if(imgFiles.get(i).getOriginalFilename() != "" && imgFiles.get(i).getOriginalFilename() != null) {
+
+
+				if(i == 0 && fileCode1 > 0) {
+					System.out.println("첫번째 코드");
+					updateFile.put("fileCode", fileCode1);
+				}else if(i == 1  && fileCode2 > 0) {
+					System.out.println("두번째 코드");
+					updateFile.put("fileCode", fileCode2);
+				}else if(i == 2  && fileCode3 > 0) {
+					System.out.println("세번째 코드");
+					updateFile.put("fileCode", fileCode3);
+				} else {
+					updateFile.putIfAbsent("fileCode", 0);
+				}
+
+				System.out.println("중간 코드 점검 : " + updateFile.get("fileCode"));
+
+				System.out.println("문제의 원인 : " + imgFiles.get(i));
+				System.out.println("문제의 원인 : " + imgFiles.get(i).getOriginalFilename()); //원래 파일이 있던 경우는 null임
+				System.out.println(!filePath1.isEmpty() || !filePath2.isEmpty() || !filePath3.isEmpty());
+				if((!filePath1.isEmpty() || !filePath2.isEmpty() || !filePath3.isEmpty()) && imgFiles.get(i).getOriginalFilename() == "") {
+
+					System.out.println("if문 1 들어옴");
+					String fileName = "";
+					if(i == 0) {
+						fileName = filePath1;
+					} else if(i == 1) {
+						fileName = filePath2;
+					} else if(i == 2) {
+						fileName = filePath3;
+					}
+					
+					updateFile.put("fileName", fileName);
+					
+					System.out.println("문제 내용 : " + updateFile);
+					
+					if(updateFile.get("fileCode").equals(0)) {
+						result = managerService.registBusinessFile(updateFile);
+					} else {
+						result = managerService.updateBusinessFile(updateFile);
+					}
+
+				} else if( imgFiles.get(i) == null ){	
+					
+					System.out.println("if문 들어옴");
+					String fileName = "";
+					updateFile.put("fileName", fileName);
+					
+					System.out.println("문제 내용 : " + updateFile);
+					
+					if(updateFile.get("fileCode").equals(0)) {
+						result = managerService.registBusinessFile(updateFile);
+					} else {
+						result = managerService.updateBusinessFile(updateFile);
+					}
+				} else {
+					System.out.println("else문 들어옴");
 					String originFileName = imgFiles.get(i).getOriginalFilename();
 					String ext = originFileName.substring(originFileName.indexOf("."));
 					String savedName = UUID.randomUUID().toString().replace("-", "") + ext;
 
-						
-					if(i == 0 && fileCode1 > 0) {
-						System.out.println("첫번째 코드");
-						updateFile.put("fileCode", fileCode1);
-					}else if(i == 1  && fileCode2 > 0) {
-						System.out.println("두번째 코드");
-						updateFile.put("fileCode", fileCode2);
-					}else if(i == 2  && fileCode3 > 0) {
-						System.out.println("세번째 코드");
-						updateFile.put("fileCode", fileCode3);
-					} else {
-						updateFile.putIfAbsent("fileCode", 0);
-					}
-					
+
 					try {
 						imgFiles.get(i).transferTo(new File(filePath + "/" + savedName));
-						
 						String fileName = "resources/uploadFiles/" + savedName;
 						updateFile.put("fileName", fileName);
-						
+
+						System.out.println("문제 내용2 : " + updateFile);
 						if(updateFile.get("fileCode").equals(0)) {
 							result = managerService.registBusinessFile(updateFile);
 						} else {
@@ -1131,15 +1200,21 @@ public class ManagerController {
 						}
 
 					} catch (IllegalStateException | IOException e) {
-
+						System.out.println("catch문 들어옴");
 						new File(filePath + "/" + savedName).delete();
-
 						e.printStackTrace();
 					}
-				} 
-			}
+				}
+
+
+
+
+			} 
+		} else if(imgFiles.isEmpty()) {
+
 		}
 
+		/* 답변 업데이트 */
 		int result2 = managerService.updateBusinessAnswer(updateInfo);
 
 		if(result > 0 && result2 > 0) {
@@ -1350,7 +1425,7 @@ public class ManagerController {
 		model.addAttribute("answerFileList", answerFileList);
 
 	}
-	
+
 	/* 리뷰 신고 현황 */
 	/**
 	 * @param model
@@ -2223,36 +2298,36 @@ public class ManagerController {
 			, @RequestParam(value = "startDate", required = false) String startDate, @RequestParam(value = "endDate", required = false) String endDate) {
 		/* ==== 현재 페이지 처리 ==== */
 		int pageNo = 1;
-		
+
 		System.out.println("currentPage : " + currentPage);
-		
+
 		if(currentPage != null && !"".equals(currentPage)) {
 			pageNo = Integer.parseInt(currentPage);
 		}
-		
+
 		if(pageNo <= 0) {
 			pageNo = 1;
 		}
-		
+
 		System.out.println(currentPage);
 		System.out.println(pageNo);
-		
+
 		Map<String, Object> searchMap = new HashMap<>();
 		searchMap.put("searchValue", searchValue);
 		searchMap.put("startDate", startDate);
 		searchMap.put("endDate", endDate);
-		
-		
+
+
 		/* ==== 조건에 맞는 게시물 수 처리 ==== */
 		int totalCount = managerService.selectTaxAdjustTotalCount(searchMap);
-		
+
 		System.out.println("totalInquiryBoardCount : " + totalCount);
-		
+
 		int limit = 10;
 		int buttonAmount = 10;
-		
+
 		Pagination pagination = null;
-		
+
 		/* ==== 검색과 selectOption 고르기 ==== */
 		if(searchValue != null && !"".equals(searchValue)) {
 			pagination = Pagination.getPagination(pageNo, totalCount, limit, buttonAmount, "", searchValue);
@@ -2260,26 +2335,26 @@ public class ManagerController {
 			pagination = Pagination.getPagination(pageNo, totalCount, limit, buttonAmount);
 		}
 		System.out.println("pagination : " + pagination);
-		
-//		pagination.setSearchCondition(condition);
+
+		//		pagination.setSearchCondition(condition);
 		Map<String, Object> map = new HashMap<>();
 		map.put("pagination", pagination);
 		map.put("startDate", startDate);
 		map.put("endDate", endDate);
-		
+
 		List<TaxAdjustDTO> taxAdjustList = managerService.selectTaxAdjustListList(map);
 		System.out.println("리스트 확인 : " + taxAdjustList);
-		
+
 		for(TaxAdjustDTO t : taxAdjustList) {
 			t.setMsPrice(t.getMsPrice().replaceAll(",", ""));;
 		}
-		
+
 		Map<String, String> dateMap = new HashMap<String, String>();;
 		if(startDate != null) {
 			dateMap.put("startDate", startDate);
 			dateMap.put("endDate", endDate);
 		}
-		
+
 		if(taxAdjustList != null) {
 			model.addAttribute("pagination", pagination);
 			model.addAttribute("taxAdjustList", taxAdjustList);
@@ -2288,7 +2363,7 @@ public class ManagerController {
 			System.out.println("조회실패");
 		}
 	}
-	
+
 	/* 중개이용료 리스트 */
 	@GetMapping("taxDetailAdjustment")
 	public void taxDetailAdjustment() {}
