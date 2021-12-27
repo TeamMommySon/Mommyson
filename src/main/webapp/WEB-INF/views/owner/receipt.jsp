@@ -156,18 +156,18 @@ function goPrint(title){
     let xpos=(sw-w)/2; 
     let ypos=(sh-h)/2; 
 
-    let pHeader="<html><head><link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css' integrity='sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn' crossorigin='anonymous'><link rel='stylesheet' href='${ pageContext.servletContext.contextPath }/resources/css/coupon.css'> <title>" + title + "</title></head><body>";
+    let pHeader="<html><head><link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css' integrity='sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn' 'crossorigin=anonymous'><link rel='stylesheet' href='${ pageContext.servletContext.contextPath }/resources/css/coupon.css'> <title>" + title + "</title></head><body>";
     let pgetContent=document.getElementById("Layout").innerHTML + "<br>";
-    //innerHTML을 이용하여 Div로 묶어준 부분을 가져옵니다.
+    //innerHTML을 이용하여 Div로 묶어준 부분을 가져오
     let pFooter="</body></html>";
     pContent=pHeader + pgetContent + pFooter; 
      
     pWin=window.open("","print","width=" + w +",height="+ h +",top=" + ypos + ",left="+ xpos +",status=yes,scrollbars=yes"); //동적인 새창을 띄웁니다.
     pWin.document.open(); //팝업창 오픈
-    pWin.document.write(pContent); //새롭게 만든 html소스를 씁니다.
+    pWin.document.write(pContent); 
     pWin.document.close(); //클로즈
     pWin.print(); //윈도우 인쇄 창 띄우고
-    pWin.close(); //인쇄가 되던가 취소가 되면 팝업창을 닫습니다.
+    pWin.close(); //인쇄가 되던가 취소가 되면 팝업창 닫
    }
 </script>
 </body>

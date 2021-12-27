@@ -150,7 +150,20 @@ public class OwnerServiceImpl implements OwnerService{
 	@Override
 	public int removeProduct(List<Integer> deleteCode) {
 
-		int result = ownerDAO.removeProduct(deleteCode);
+		int result = 0;
+		
+		int delete = ownerDAO.removeProduct(deleteCode);
+		
+		if(delete > 0) {
+			
+			int delCode = ownerDAO.removeProductCode(deleteCode);
+			
+			if(delCode > 0) {
+				
+				result += 1;
+			}
+			
+		}
 		
 		return result;
 	}

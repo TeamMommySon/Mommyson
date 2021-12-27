@@ -44,6 +44,7 @@
               </tr>
             </thead>
             <tbody>
+            <c:if test="${ requestScope.info ne null and !empty requestScope.info}">
               <c:forEach var="list" items="${ requestScope.info }">
               <c:set var="i" value="${ i + 1 }"/>
               <c:set var="j" value="${ (requestScope.pagination.pageNo / 2) * 10 }"/>
@@ -62,6 +63,13 @@
                 <td><a href="${ pageContext.servletContext.contextPath }/owner/receipt?payDate=<fmt:formatDate value="${ list.PAY_DATE }" pattern="yyyy-MM-dd"/>">상세보기</a></td>
               </tr>
               </c:forEach>
+             </c:if>
+
+			<c:if test="${ empty requestScope.info }">
+				<tr>
+					<td colspan="6" style="font-weight: 700; font-size: 20px; padding-top : 70px;">결제한 이용권이 없습니다.</td>
+				</tr>
+			</c:if>             
             </tbody>
           </table>
         </div>
@@ -72,6 +80,8 @@
 	
 	<!-- footer -->
 	 <jsp:include page="../commons/footer.jsp"/>
-	
+	<script>
+		$('.pagination').css("margin-left","680px");
+	</script>
 </body>
 </html>

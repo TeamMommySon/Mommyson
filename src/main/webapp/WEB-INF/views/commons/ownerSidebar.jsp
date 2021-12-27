@@ -91,13 +91,13 @@
                             <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false">상품관리</a><hr>
                             <ul class="collapse list-unstyled" id="homeSubmenu">
                                 <li>
-                                    <a href="${ pageContext.servletContext.contextPath }/owner/productRegist">상품등록</a>
+                                    <a class="aLink" href="${ pageContext.servletContext.contextPath }/owner/productRegist">상품등록</a>
                                 </li>
                                 <li>
-                                    <a href="${ pageContext.servletContext.contextPath }/owner/productManagement">판매 상품 관리</a>
+                                    <a class="aLink" href="${ pageContext.servletContext.contextPath }/owner/productManagement">판매 상품 관리</a>
                                 </li>
                                 <li>
-                                    <a href="${ pageContext.servletContext.contextPath }/owner/todayDiscount">오늘의 할인</a>
+                                    <a class="aLink" href="${ pageContext.servletContext.contextPath }/owner/todayDiscount">오늘의 할인</a>
                                 </li>
                             </ul>
                         </li>
@@ -105,10 +105,10 @@
                             <a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false">주문관리</a><hr>
                             <ul class="collapse list-unstyled" id="pageSubmenu">
                                 <li>
-                                    <a href="${ pageContext.servletContext.contextPath }/owner/order">주문접수</a>
+                                    <a class="aLink" href="${ pageContext.servletContext.contextPath }/owner/order">주문접수</a>
                                 </li>
                                 <li>
-                                    <a href="${ pageContext.servletContext.contextPath }/owner/order2">완료된 주문</a>
+                                    <a  class="aLink" href="${ pageContext.servletContext.contextPath }/owner/order2">완료된 주문</a>
                                 </li>
                             
                             </ul>
@@ -117,10 +117,10 @@
                             <a href="#pageSubmenu4" data-toggle="collapse" aria-expanded="false">쿠폰내역</a><hr>
                             <ul class="collapse list-unstyled 1" id="pageSubmenu4">
                                 <li>
-                            		<a href="${ pageContext.servletContext.contextPath }/owner/coupon">쿠폰발행</a>
+                            		<a class="aLink" href="${ pageContext.servletContext.contextPath }/owner/coupon">쿠폰발행</a>
                                 </li>
                                 <li>
-                                    <a href="${ pageContext.servletContext.contextPath }/owner/giveCouponLIst">쿠폰 발행 내역</a>
+                                    <a class="aLink" href="${ pageContext.servletContext.contextPath }/owner/giveCouponLIst">쿠폰 발행 내역</a>
                                 </li> 
                             </ul>
                         </li>
@@ -128,13 +128,13 @@
                             <a href="#pageSubmenu1" data-toggle="collapse" aria-expanded="false">매출내역</a><hr>
                             <ul class="collapse list-unstyled 1" id="pageSubmenu1">
                                 <li>
-                                    <a href="${ pageContext.servletContext.contextPath }/owner/salesDay">일별 매출</a>
+                                    <a class="aLink" href="${ pageContext.servletContext.contextPath }/owner/salesDay">일별 매출</a>
                                 </li>
                                 <li>
-                                    <a href="${ pageContext.servletContext.contextPath }/owner/salseMonth">월별 매출</a>
+                                    <a class="aLink" href="${ pageContext.servletContext.contextPath }/owner/salseMonth">월별 매출</a>
                                 </li>
                                 <li>
-                                    <a href="${ pageContext.servletContext.contextPath }/owner/salesList">정산</a>
+                                    <a class="aLink" href="${ pageContext.servletContext.contextPath }/owner/salesList">정산</a>
                                 </li>
                             </ul>
                         </li>
@@ -142,7 +142,7 @@
                             <a href="#pageSubmenu2" data-toggle="collapse" aria-expanded="false">고객관리</a><hr>
                             <ul class="collapse list-unstyled" id="pageSubmenu2">
                                 <li>
-                                    <a href="${ pageContext.servletContext.contextPath }/owner/review">리뷰관리</a>
+                                    <a class="aLink" href="${ pageContext.servletContext.contextPath }/owner/review">리뷰관리</a>
                                 </li> 
                             </ul>
                         </li>
@@ -151,7 +151,7 @@
                         </li>
                         <hr>
                         <li>
-                            <a href="${ pageContext.servletContext.contextPath }/owner/receiptList">이용권 구매 영수증 관리</a>
+                            <a class="aLink" href="${ pageContext.servletContext.contextPath }/owner/receiptList">이용권 구매 영수증 관리</a>
                         </li>
 		          </nav>
 	     		<script>
@@ -160,6 +160,16 @@
 		                  $('#sidebar').toggleClass('active');
 		              });
 		          	});
+						
+	      			$('.aLink').on('click',function(e){
+	      				
+	      				if(${ sessionScope.membership == null && empty sessionScope.membership }){	
+	      				
+	      				 	alert("이용권을 결제한 뒤 사용하실 수 있습니다.");
+	      				 	
+	      				 	e.preventDefault();
+	      				}
+	      			});
 	      	</script> 
      	 </div>
    	 </div>
