@@ -40,7 +40,7 @@
                 <div class="sub_box">
                     <h3>대표이미지</h3>
                     <div id="review_pic">
-                        <input type="image" src="${ pageContext.servletContext.contextPath }/${ sessionScope.owner.ceo.store.storeImg }" id="review_img">
+                        <input type="image" src="${ pageContext.servletContext.contextPath }/${ sessionScope.owner.ceo.store.storeImg }" style="pointer-events : none" id="review_img">
                     </div>
                     <div>
                         <button type="button" class="pink_btn" data-toggle="modal" data-target="#exampleModal">
