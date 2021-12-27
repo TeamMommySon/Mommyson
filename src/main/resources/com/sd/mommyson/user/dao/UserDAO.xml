@@ -1308,18 +1308,6 @@
     	WHERE FILE_CODE = #{ fileCode }  
     </update>
     
-    <update id="updateOrder2" parameterType="hashmap">
-        UPDATE ORDER_TBL
-           SET TOTAL_PRICE = #{ totalPrice },
-               ORDER_RUQEUST_TIME = TO_DATE(SYSDATE,'YYYY-MM-DD HH24:mi:ss'),
-               PHONE = #{ phone },
-               TAKE_TIME = #{ time },
-               ADDRESS = #{ address },
-               POST_CODE = #{ zipCode },
-               D_ADDRESS = #{ detailAddress }
-         WHERE ORDER_CODE = #{ orderCode }
-    </update>
-    
     <insert id="insertRTNotice">
     	<selectKey keyProperty="memCode" resultType="int" order="BEFORE">
 	    	SELECT
