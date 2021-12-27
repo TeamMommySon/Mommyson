@@ -237,7 +237,7 @@
         
         $('#ck').on('click',function(){
         	
-        	if(${ sessionScope.membership == null && sessionScope.membership == ""}){
+        	if(${ sessionScope.membership == null && sessionScope.membership == "" }){
         		if(alert('이용권을 구매 후 사용하실 수 있습니다.')){
         			location.href = '${ pageContext.servletContext.contextPath }/owner/ownerPay'
         		}

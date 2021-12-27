@@ -89,8 +89,8 @@
             </table>
             <script>
             	$('#excel').on('click',function() {
-            		let sourceVal = document.getElementById("excel").files[0].path;
-            		console.log(sourceVal);
+            		/* let sourceVal = document.getElementById("excel").files[0].path;
+            		console.log(sourceVal); */
             		let codeList = [];
             		$('input:checkbox[name=ch1]:checked').each(function(index,item) {
             			codeList.push($(this).val());
@@ -103,7 +103,7 @@
             				codeList : codeList
             			},
             			success: function(data) {
-            				
+            				alert("엑셀 파일이 저장되었습니다.");
             			}
             		});
             		

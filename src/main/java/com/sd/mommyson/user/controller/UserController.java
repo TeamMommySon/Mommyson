@@ -1858,8 +1858,6 @@ public class UserController {
 		/* ==== 현재 페이지 처리 ==== */
 		int pageNo = 1;
 
-		System.out.println("currentPage : " + currentPage);
-
 		if(currentPage != null && !"".equals(currentPage)) {
 			pageNo = Integer.parseInt(currentPage);
 		}
@@ -1868,9 +1866,6 @@ public class UserController {
 			pageNo = 1;
 		}
 
-		System.out.println(currentPage);
-		System.out.println(pageNo);
-
 		/* ==== 검색 처리 ==== */
 		String searchCondition = type;
 		String searchValue = (String) model.getAttribute("searchValue");
@@ -1878,11 +1873,9 @@ public class UserController {
 		Map<String, String> searchMap = new HashMap<>();
 		searchMap.put("searchValue", searchValue);
 		searchMap.put("type", type);
-		System.out.println("searchMap : " + searchMap);
+		
 		/* ==== 조건에 맞는 게시물 수 처리 ==== */
 		int totalCount = userService.selectStoreTotalCount(searchMap);
-
-		System.out.println("totalInquiryBoardCount : " + totalCount);
 
 		int limit = 12;
 		int buttonAmount = 10;
@@ -1896,11 +1889,7 @@ public class UserController {
 			pagination = Pagination.getPagination(pageNo, totalCount, limit, buttonAmount, searchCondition, null);
 		}
 
-		System.out.println("pagination : " + pagination);
-
 		List<StoreDTO> storeList = userService.selectStoreList(pagination);
-
-		System.out.println("리스트 확인 : " + storeList);
 
 		if(storeList != null) {
 			model.addAttribute("pagination",pagination);

@@ -690,6 +690,7 @@
     		 , A.ORDERABLE_STATUS
     	  FROM PRODUCT_TBL A
     	 WHERE A.IS_DELETED = 'N'
+    	   AND A.ORDERABLE_STATUS = 'Y'
     	   AND A.EXPIRY_DATE <![CDATA[ >=  ]]> SYSDATE
     	   AND A.MEM_CODE = #{ memCode }
     </select>
