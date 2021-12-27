@@ -24,9 +24,7 @@
 
 		<div class="board_container">
 			<h2>공지사항</h2>
-			<form
-				action="${ pageContext.servletContext.contextPath }/manager/noticeSelect"
-				method="GET">
+			<form action="${ pageContext.servletContext.contextPath }/manager/noticeSelect" method="GET">
 				<select class="sel_notice" name="searchCondition"
 					id="searchCondition">
 					<option value="all"

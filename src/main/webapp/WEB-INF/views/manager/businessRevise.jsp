@@ -100,26 +100,26 @@
                     <p>이미지 첨부</p>
                 </div>
                 <c:set value="${ requestScope.answerFileList }" var="answerImg"/>
-                <c:if test="${ !empty answerImg[0] }">
+                <c:if test="${ !empty answerImg[0] && answerImg[0].fileName  ne null }">
                 <div class="change_photo" id="view_area1"><img class="img_size" id="view_img1" src="${ pageContext.servletContext.contextPath }/${ answerImg[0].fileName }"></div>
                 </c:if>
-                <c:if test="${ empty answerImg[0] }">
+                <c:if test="${ empty answerImg[0] || answerImg[0].fileName eq null }">
                 <div class="change_photo" id="view_area1"><img class="img_size" id="view_img1" src="${ pageContext.servletContext.contextPath }/resources/images/photo2.png"></div>
                 </c:if>
                 <input type="hidden" name="fileCode1" value="${ answerImg[0].fileCode }">
                 
-                <c:if test="${ !empty answerImg[1] }">
+                <c:if test="${ !empty answerImg[1] && answerImg[1].fileName  ne null }">
                 <div class="change_photo" id="view_area2"><img class="img_size" id="view_img2" src="${ pageContext.servletContext.contextPath }/${ answerImg[1].fileName }"></div>
                 </c:if>
-                <c:if test="${ empty answerImg[1] }">
+                <c:if test="${ empty answerImg[1] || answerImg[1].fileName eq null }">
                 <div class="change_photo" id="view_area2"><img class="img_size" id="view_img2" src="${ pageContext.servletContext.contextPath }/resources/images/photo2.png"></div>
                 </c:if>
                 <input type="hidden" name="fileCode2" value="${ answerImg[1].fileCode }">
                 
-                <c:if test="${ !empty answerImg[2] }">
+                <c:if test="${ !empty answerImg[2] && answerImg[2].fileName  ne null }">
                 <div class="change_photo" id="view_area3" style="margin-right:0;"><img class="img_size" id="view_img3" src="${ pageContext.servletContext.contextPath }/${ answerImg[2].fileName }"></div>
                 </c:if>
-                <c:if test="${ empty answerImg[2] }">
+                <c:if test="${ empty answerImg[2] || answerImg[2].fileName eq null }">
                 <div class="change_photo" id="view_area3" style="margin-right:0;"><img class="img_size" id="view_img3" src="${ pageContext.servletContext.contextPath }/resources/images/photo2.png"></div>
                 </c:if>
                 <input type="hidden" name="fileCode3" value="${ answerImg[2].fileCode }">

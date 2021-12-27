@@ -915,14 +915,23 @@ public class ManagerController {
 		registInfo.put("ansContent",ansContent);
 		registInfo.put("postNo",postNo);
 
+		/* 파일이름이 비어있지 않으면 리스트에 바로 넣어주고, 비어있으면 Null값 넣어줌 */
 		if(fileName1.getOriginalFilename() != "") {
 			imgFiles.add(fileName1);
+		} else {
+			imgFiles.add(null);
 		}
+		
 		if(fileName2.getOriginalFilename() != "") {
 			imgFiles.add(fileName2);
+		} else {
+			imgFiles.add(null);
 		}
+		
 		if(fileName3.getOriginalFilename() != "") {
 			imgFiles.add(fileName3);
+		} else {
+			imgFiles.add(null);
 		}
 
 		System.out.println("이미지 체크 : " + imgFiles);
@@ -934,16 +943,19 @@ public class ManagerController {
 		if(!mkdir.exists()) {
 			mkdir.mkdirs();
 		}
-
+		
+		/* xml에 등록할 파일 맵 */
 		Map<String, Object> registfile = new HashMap<>();
 		registfile.put("postNo",postNo);
 
 		int result = 0;
+		/* 파일이 비어있지않으면 파일 등록하러가기~ */
 		if(!imgFiles.isEmpty()) {
 
 			for(int i = 0; i < imgFiles.size(); i++) {
 
-				System.out.println(i);
+				if(imgFiles.get(i) != null) {
+				
 				String originFileName = imgFiles.get(i).getOriginalFilename();
 				String ext = originFileName.substring(originFileName.indexOf("."));
 				String savedName = UUID.randomUUID().toString().replace("-", "") + ext;
@@ -964,10 +976,17 @@ public class ManagerController {
 
 					e.printStackTrace();
 				}
+				} else {
+					
+					registfile.put("fileName", "none");
+					
+					result = managerService.registBusinessFile(registfile);
+				}
 
 			}
 		}
 
+		/* 답변 내용 등록하러 가기~ */
 		int result2 = managerService.registBusinessAnswer(registInfo);
 
 		if(result > 0 && result2 > 0) {
@@ -994,7 +1013,7 @@ public class ManagerController {
 
 		/* 파일리스트 조회 - 답변자 */
 		List<FileDTO> answerFileList = managerService.selectAnswerImg(postNo);
-
+		
 		model.addAttribute("businessQuestion", businessQuestion);
 		model.addAttribute("ImgFileList", ImgFileList);
 		model.addAttribute("answerFileList", answerFileList);
@@ -1010,18 +1029,29 @@ public class ManagerController {
 			, @RequestParam(value = "fileName1", required = false) MultipartFile fileName1, @RequestParam(value = "fileName2", required = false) MultipartFile fileName2, @RequestParam(value = "fileName3", required = false) MultipartFile fileName3
 			, @RequestParam(value = "fileCode1", defaultValue = "0") int fileCode1, @RequestParam(value = "fileCode2", defaultValue = "0") int fileCode2, @RequestParam(value = "fileCode3", defaultValue = "0") int fileCode3) {
 
+		/* 업데이트할 정보들 맵에 저장 */
 		Map<String, Object> updateInfo = new HashMap<>();
-		List<MultipartFile> imgFiles = new ArrayList<MultipartFile>();
 		updateInfo.put("ansContent",ansContent);
 		updateInfo.put("postNo",postNo);
-
+		
+		/* 리스트에 이미지 파일 넣기 */
+		List<MultipartFile> imgFiles = new ArrayList<MultipartFile>();
 		imgFiles.add(fileName1);
 		imgFiles.add(fileName2);
 		imgFiles.add(fileName3);
 
+		/* 만약 비어있는 경우 null 값으로 채워주기 */
+		for(MultipartFile m : imgFiles) {
+			if(m.isEmpty()) {
+				m = null;
+			}
+		}
+		
+		/* 들어온 이미지 리스트 체크, 코드 체크 */
 		System.out.println("이미지 체크 : " + imgFiles);
-		System.out.println("코드 1 : " + fileCode1 + "코드 2 : " + fileCode2 +"코드 3 : " + fileCode3);
+		System.out.println("코드 1 : " + fileCode1 + ", 코드 2 : " + fileCode2 +", 코드 3 : " + fileCode3);
 
+		/* 저장할 파일 루트, 폴더 설정 */
 		String root = request.getSession().getServletContext().getRealPath("resources");
 
 		String filePath = root + "/uploadFiles";
@@ -1030,8 +1060,8 @@ public class ManagerController {
 		if(!mkdir.exists()) {
 			mkdir.mkdirs();
 		}
-
-
+		
+		/* 파일이 비어져있어도 넘겨줍시다. */
 		int result = 0;
 		if(!imgFiles.isEmpty()) {
 			
@@ -1080,8 +1110,11 @@ public class ManagerController {
 					}
 				} 
 			}
+		} else if(imgFiles.isEmpty()) {
+			
 		}
 
+		/* 답변 업데이트 */
 		int result2 = managerService.updateBusinessAnswer(updateInfo);
 
 		if(result > 0 && result2 > 0) {

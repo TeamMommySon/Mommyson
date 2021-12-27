@@ -134,27 +134,26 @@
                     <p>이미지 첨부</p>
                 </div>
                 <c:set value="${ requestScope.answerFileList }" var="answerImg"/>
-                <c:if test="${ !empty answerImg[0] }">
+                <c:if test="${ !empty answerImg[0] && answerImg[0].fileName  ne null }">
                 <div class="change_photo"><img class="img_size addEvent" src="${ pageContext.servletContext.contextPath }/${ answerImg[0].fileName }"></div>
                 </c:if>
-                <c:if test="${ empty answerImg[0] }">
+                <c:if test="${ empty answerImg[0] || answerImg[0].fileName eq null }">
                 <div class="change_photo"><img class="img_size addEvent" src="${ pageContext.servletContext.contextPath }/resources/images/photo2.png"></div>
                 </c:if>
                 
-                <c:if test="${ !empty answerImg[1] }">
+                <c:if test="${ !empty answerImg[1] && answerImg[1].fileName ne null }">
                 <div class="change_photo"><img class="img_size addEvent" src="${ pageContext.servletContext.contextPath }/${ answerImg[1].fileName }"></div>
                 </c:if>
-                <c:if test="${ empty answerImg[1] }">
+                <c:if test="${ empty answerImg[1] || answerImg[1].fileName eq null }">
                 <div class="change_photo"><img class="img_size addEvent" src="${ pageContext.servletContext.contextPath }/resources/images/photo2.png"></div>
                 </c:if>
                 
-                <c:if test="${ !empty answerImg[2] }">
+                <c:if test="${ !empty answerImg[2] && answerImg[2].fileName ne null }">
                 <div class="change_photo" style="margin-right:0;"><img class="img_size addEvent" src="${ pageContext.servletContext.contextPath }/${ answerImg[2].fileName }"></div>
                 </c:if>
-                <c:if test="${ empty answerImg[2] }">
+                <c:if test="${ empty answerImg[2] || answerImg[2].fileName eq null }">
                 <div class="change_photo" style="margin-right:0;"><img class="img_size addEvent" src="${ pageContext.servletContext.contextPath }/resources/images/photo2.png"></div>
                 </c:if>
-                
                 <div class="photo_size">이미지당 10MB이하, 최대 3개까지 등록 가능합니다.</div>
                 <div class="btn_box">
                     <input type="button" value="수정하기" class="btn write_btn" style="background-color: #F89E91;" onclick="location.href='${ pageContext.servletContext.contextPath }/manager/businessRevise?postNo=${ bq.postNo }'">
