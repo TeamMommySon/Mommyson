@@ -1165,7 +1165,7 @@
 			 			   , C.ANS_CONTENT
 			 		 	FROM POST_TBL C
 			 		    JOIN BOARD_TBL D ON(D.BOARD_CODE = C.BOARD_CODE)
-			 		   WHERE (D.TYPE = 'userMtmConsulting' OR D.TYPE = 'userMtmConsulting')
+			 		   WHERE (D.TYPE = 'userMtmConsulting' OR D.TYPE = 'OwnerMtmConsulting')
 			 		   	 AND C.MEM_CODE = #{ searchCondition }
 			 		   	 AND C.STATUS = 'N'
 			 		   <if test="searchValue != null">
