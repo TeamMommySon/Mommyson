@@ -743,14 +743,13 @@ public class OwnerController {
 	}
 	
 	@GetMapping("order")
-	public String orderList(@ModelAttribute("loginMember") MemberDTO member, @RequestParam(value = "currentPage", required = false) String currentPage ,Model model) {
+	public String orderList(@ModelAttribute("loginMember") MemberDTO member, 
+							@RequestParam(value = "currentPage", required = false) String currentPage ,Model model) {
 		
 		// MemberDTO 안에 CeoDTo 안에 StoreDTO 안에 storeName 이 존재하니 뽑아서 넘겨준다.
 		MemberDTO owner = ownerService.selectOwner(member);
 		String storeName = owner.getCeo().getStore().getStoreName();
 		System.out.println("스토어 이름 : " + storeName);
-		
-		// 주문 접수 가져오기
 		
 		/* 주문 접수 페이지 처리  - 조건 없는 페이지 */
 		// 현재 페이지

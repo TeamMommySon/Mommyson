@@ -75,16 +75,24 @@ public interface UserService {
 	/* 방문포장 쿠폰 리스트 조회 */
 	List<CouponDTO> selectCouponList(int memCode);
 
-	void deleteOrder(List<Integer> orderCodeList);
-	
+	/* 방문포장 주문 리스트 update */
 	int updateOrder(List<Map<String, Object>> list);
 	
+	/* 방문포장,배달 쿠폰 리스트 update */
 	int updateCouponStatus(List<Integer> list2);
 	
 	/* 방문포장 결제완료화면 조회 */
-	List<OrderDTO> selectPackageOrderComplete(HashMap<String, Object> map);
-
+	List<Map<String, Object>> selectPackageOrderComplete(List<Map<String, Object>> list);
+	
+	/* 배달주문 결제 시 주문내역 업데이트 */
+	int updateOrder2(List<Map<String, Object>> list);
+	
 	/* 배달 결제완료화면 조회 */
+	List<Map<String, Object>> selectDeliveryOrderComplete(List<Map<String, Object>> list);
+	
+	/* 주문 결제 취소 */
+	void deleteOrder(List<Integer> orderCodeList);
+
 	int insertReport(Map<String, Integer> reportInfo);
 
 	Map<String, String> selectStoreInfoByMemcode(int memCode);
@@ -131,8 +139,5 @@ public interface UserService {
 	
 	/* 회원주소조회 */
 	MemberDTO selectMemberAddress(int memCode);
-
-	/* 배달주문 결제 시 주문내역 업데이트 */
-	int updateOrder2(List<Map<String, Object>> list);
 
 }

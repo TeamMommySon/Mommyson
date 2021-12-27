@@ -37,6 +37,7 @@
 			<button type="reset" class="goLogin" id="goLogin"
 				style="border-radius: 9px; background-color: rgb(247, 170, 145);">로그인</button>
 	</div>
+	<jsp:include page="../commons/footer.jsp"/>
 	<script>
 		/* 이름 입력 여부 확인 & 정규식 확인 */
 		$("#name").blur(function(){

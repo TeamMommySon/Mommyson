@@ -783,7 +783,7 @@
 
 	<!-- 방문포장 주문리스트 저장 -->
 	<insert id="insertPackageOrderList">
-      INSERT 
+      INSERT ALL
         INTO ORDER_TBL
       VALUES
          (
@@ -800,39 +800,69 @@
           , null
           , null
           , SYSDATE
-          , #{ storeCode }     
+          , #{ storeCode }
+          , null
+          , null    
           )
+        INTO ORDER_INFO_TBL
+      VALUES 
+         (
+         	#{ sdCode }
+		  , #{ amount }
+		  , SEQ_ORDER_CODE.CURRVAL
+		  , SEQ_PRO_NO.NEXTVAL                
+         )
+      SELECT * FROM DUAL    
    </insert>
 
 	<!-- 배달 주문리스트 저장 -->
 	<insert id="insertDeliveryOrderList">
-		INSERT
-		  INTO ORDER_TBL
-		VALUES 
-			( 
-		     #{ memCode }
-		   , #{ totalPrice }
-		   , SEQ_ORDER_CODE.NEXTVAL
-		   , '배달'
-		   , null
-		   , null
-		   , null
-		   , #{ storeName }
-		   , 1
-		   , null
-		   , null
-		   , null
-		   , SYSDATE
-		   , #{ storeCode }
-		   , null
-		   , null
-			)
+		INSERT ALL
+        INTO ORDER_TBL
+      VALUES
+         (
+            #{ memCode }
+          , #{ price }
+          , SEQ_ORDER_CODE.NEXTVAL
+          , '배'
+          , null
+          , null
+          , null
+          , #{ storeName }
+          , 1
+          , null
+          , null
+          , null
+          , SYSDATE
+          , #{ storeCode }  
+          , null
+          , null   
+          )
+        INTO ORDER_INFO_TBL
+      VALUES 
+         (
+         	#{ sdCode }
+		  , #{ amount }
+		  , SEQ_ORDER_CODE.CURRVAL
+		  , SEQ_PRO_NO.NEXTVAL                
+         )
+      SELECT * FROM DUAL   
 	</insert>
 
 	<!-- 마지막 주문 코드 조회 -->
     <select id="selectLastOrderCode" resultType="_int">
     	SELECT SEQ_ORDER_CODE.CURRVAL FROM DUAL
     </select>
+    
+    <!-- 결제취소 -->
+    <delete id="deleteOrder" parameterType="list">
+    	DELETE FROM ORDER_TBL
+    	 WHERE ORDER_CODE IN (
+    	 <foreach collection="list" separator="," item="item">
+    	 	#{ item }
+    	 </foreach>
+    	 )
+    </delete>
     
     <resultMap type="com.sd.mommyson.owner.dto.CouponDTO" id="couponResultMap">
 		<id property="cpCode" column="CP_CODE"/>
@@ -864,15 +894,7 @@
     	   AND A.MEM_CODE = #{ memCode }
     </select>
     
-    <!-- 주문코드 삭제 -->
-    <delete id="deleteOrder" parameterType="list">
-    	DELETE FROM ORDER_TBL
-    	 WHERE ORDER_CODE IN (
-    	 <foreach collection="list" separator="," item="item">
-    	 	#{ item }
-    	 </foreach>
-    	 )
-    </delete>
+
     
     <!-- 방문포장 결제 업데이트 -->
     <update id="updateOrder" parameterType="hashmap">
@@ -895,9 +917,11 @@
     	 </foreach>
     	 )
     </update>
+    
+
 
 	<!-- 결제완료화면 조회 -->
-	<select id="selectPackageOrderComplete" resultMap="orderResultMap">
+	<select id="selectPackageOrderComplete" resultType="hashmap" parameterType="list">
 		SELECT 
 				   O.MEM_CODE 
 				 , O.TOTAL_PRICE 
@@ -917,38 +941,57 @@
 			  LEFT JOIN ORDER_INFO_TBL I ON(O.ORDER_CODE = I.ORDER_CODE)
 	          LEFT JOIN PRODUCT_TBL P ON (I.SD_CODE = P.SD_CODE)
 			  LEFT JOIN STORE_TBL S ON (O.STORE_CODE  =  S.MEM_CODE)
-			 WHERE O.MEM_CODE = #{ memCode }
-			   AND O.ORDER_CODE = #{ orderCode }
+			 WHERE O.ORDER_CODE IN (
+			 <foreach collection="list" separator="," item="item">
+			 	#{ item.orderCode }
+			 </foreach>
+			 )
 	</select>
 	
+	 <!-- 배달 결제 업데이트 -->
+	<update id="updateOrder2" parameterType="hashmap">
+        UPDATE ORDER_TBL
+           SET TOTAL_PRICE = #{ totalPrice },
+               ORDER_RUQEUST_TIME = TO_DATE(SYSDATE,'YYYY-MM-DD HH24:mi:ss'),
+               PHONE = #{ phone },
+               TAKE_TIME = #{ time },
+               ADDRESS = #{ address },
+               POST_CODE = #{ zipCode },
+               D_ADDRESS = #{ detailAddress }
+         WHERE ORDER_CODE = #{ orderCode }
+    </update>
 	
-<!--  	<select id="selectDeliveryOrderComplete" resultMap="orderResultMap">
+	
+ 	<select id="selectDeliveryOrderComplete" resultType="hashmap" parameterType="list">
 		SELECT 
 				   O.MEM_CODE 
 				 , O.TOTAL_PRICE 
 			     , O.ORDER_CODE 
 				 , O.ORDER_TYPE 
 				 , O.TAKE_TIME
+				 , O.ADDRESS
 				 , O.PHONE
 				 , O.STORE_NAME
 				 , O.CODE 
 				 , O.ORDER_RUQEUST_TIME
-				 , M.ADDRESS
-				 , M.POST_CODE
-				 , M.D_ADDRESS
+				 , O.POST_CODE
+				 , O.D_ADDRESS
 				 , I.SD_CODE
 				 , I.AMONT
 	             , P.SD_NAME
 	             , S.STORE_NAME
 	             , S.MEM_CODE AS STORE_CODE
-			  FROM ORDER_TBL O 		
-			  LEFT JOIN MEMBER_TBL M ON(O.MEM_CODE = M.MEM_CODE)  
+			  FROM ORDER_TBL O 		  
 			  LEFT JOIN ORDER_INFO_TBL I ON(O.ORDER_CODE = I.ORDER_CODE)
 	          LEFT JOIN PRODUCT_TBL P ON (I.SD_CODE = P.SD_CODE)
 			  LEFT JOIN STORE_TBL S ON (O.STORE_CODE  =  S.MEM_CODE)
-			 WHERE O.MEM_CODE = #{ memCode }
-			   AND O.ORDER_CODE = #{ orderCode }
-	</select> -->
+			 WHERE O.ORDER_CODE IN (
+			 <foreach collection="list" separator="," item="item">
+			 	#{ item.orderCode }
+			 </foreach>
+			 )
+		
+	</select> 
 
     <insert id="insertReport">
     	INSERT
@@ -1256,18 +1299,6 @@
     		  FILE_TBL A
     	  SET FILE_NAME = #{ cameraImg }
     	WHERE FILE_CODE = #{ fileCode }  
-    </update>
-    
-    <update id="updateOrder2" parameterType="hashmap">
-        UPDATE ORDER_TBL
-           SET TOTAL_PRICE = #{ totalPrice },
-               ORDER_RUQEUST_TIME = TO_DATE(SYSDATE,'YYYY-MM-DD HH24:mi:ss'),
-               PHONE = #{ phone },
-               TAKE_TIME = #{ time },
-               ADDRESS = #{ address },
-               POST_CODE = #{ zipCode },
-               D_ADDRESS = #{ detailAddress }
-         WHERE ORDER_CODE = #{ orderCode }
     </update>
     
     <insert id="insertRTNotice">
