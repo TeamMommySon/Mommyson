@@ -138,12 +138,12 @@
                 $('select option:selected').each(function(index) {
                    couponCodes.push($(this).attr('id'));
                 })
-                var IMP = window.IMP; 
+                var IMP = window.IMP;
                  IMP.init('imp43692691'); 
                  IMP.request_pay({
                     pg : 'kakaopay',
                      pay_method : 'card', //생략 가능
-                     merchant_uid: "${ requestScope.orderCodes[0] }", // 상점에서 관리하는 주문 번호 db에서 가져와야함
+                     merchant_uid: "${ requestScope.orderCodes[0] }",
                      name : '포장예약 결제',
                      amount : payPrice,
                      buyer_email : 'iamport@siot.do',

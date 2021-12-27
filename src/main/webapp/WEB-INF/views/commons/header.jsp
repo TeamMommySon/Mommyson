@@ -63,7 +63,7 @@
 							  <div class="btn-group" role="group">
 							    <button id="btnGroupDrop1" type="button" style="background: none; border: none; outline: none;" class="dropdown" data-toggle="dropdown" aria-expanded="false">
 							      <c:if test="${ empty sessionScope.noticeList }">
-								      <img style="width: 28px;" src="${ pageContext.servletContext.contextPath }/resources/images/bell.png">
+								      <img style="width: 28px;" src="${ pageContext.servletContext.contextPath }/resources/images/bella.png">
 							      </c:if>
 							      <c:if test="${ !empty sessionScope.noticeList }">
 								      <img style="width: 28px;" src="${ pageContext.servletContext.contextPath }/resources/images/inkedbell.png">
