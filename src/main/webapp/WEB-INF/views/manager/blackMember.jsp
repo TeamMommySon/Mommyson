@@ -46,7 +46,6 @@
 		                    <th>닉네임</th>
 		                    <th>이메일</th>
 		                    <th>가입일</th>
-		                    <th>주문횟수</th>
 		                    <th>총 결제금액</th>
 		                    <th>경고내역</th>
 		                </tr>
@@ -60,8 +59,7 @@
 		                        <td>${ nm.nickname }</td>
 		                        <td>${ nm.email }</td>
 		                        <td>${ nm.enrollDate }</td>
-		                        <td></td>
-		                        <td></td>
+		                        <td class="totalPrice"><button type="button" style="border: 0; padding: 7px;" onclick="totalPrice(this);">확인하기</button><span class="total"></span></td>
 		                        <td><a href="javascript:void(0);" onclick="blackMemDetail(this);" data-toggle="modal" data-target="#exampleModal">[경고내역보기]</a></td>
 			                </tr>
 	                	</c:forEach>
@@ -214,6 +212,27 @@
         	 }
         	 
          }
+         
+         function totalPrice(e){
+ 	    	
+ 	    	let getMemCode = e.parentElement.parentElement.firstElementChild.firstElementChild.value;
+ 	    	let price = e;
+ 	    	let result = e.nextElementSibling;
+ 	    	$.ajax({
+ 	    		url : '${ pageContext.servletContext.contextPath }/manager/totalPrice',
+ 	    		type : 'POST',
+ 	    		data : {
+ 	    			getMemCode : getMemCode
+ 	    		},
+ 	    		success : function(data){
+ 	    			$(price).css('display','none');
+ 	    			$(result).text(data + "원");
+ 	    		},
+ 	    		error : function(error){
+ 	    			console.log(error);
+ 	    		}
+ 	    	});
+ 	    }
      </script>
 </body>
 </html>

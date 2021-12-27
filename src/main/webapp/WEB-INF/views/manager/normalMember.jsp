@@ -49,7 +49,7 @@
 	                        <th>가입일</th>
 	                        <th>총 주문금액</th>
 	                        <th>경고</th>
-	                        <th>상태</th>
+	                        <!-- <th>상태</th> -->
 	                    </tr>
 	                </thead>
 	                <tbody>
@@ -62,15 +62,15 @@
 		                        <td>${ nm.email }</td>
 		                        <td>${ nm.enrollDate }</td>
 		                        <c:set value="0" var="c"/>
-		                        <td class="totalPrice">${ nm.user.totalPrice[0] } <!-- <button type="button" onclick="totalPrice(this);">확인하기</button><span class="total"></span> --></td>
+		                        <td class="totalPrice"><button type="button" style="border: 0; padding: 7px;" onclick="totalPrice(this);">확인하기</button><span class="total"></span></td>
 		                        <td>${ nm.user.repCount }</td>
-		                        <td class="memberState">${ nm.isDeleted }</td>
+		                        <%-- <td class="memberState">${ nm.isDeleted }</td> --%>
 		                    </tr>
 	                    </c:forEach>
 	                </tbody>
 	            </table>
             </form>
-            	<input type="button" name="blackAdd" id="black_add" value="블랙등록" class="black_btn">
+           	<input type="button" name="blackAdd" id="black_add" value="블랙등록" class="black_btn">
             
             <script>
             	$("#black_add").on('click', function(){
@@ -120,11 +120,11 @@
 	   	 
 	    });
 	    
-	    if($(".memberState").text().charAt(0) == 'N'){
+	    /* if($(".memberState").text().charAt(0) == 'N'){
     		$(".memberState").text("정상")
-    	}
+    	} */
 	    
-	    /* function totalPrice(e){
+	    function totalPrice(e){
 	    	
 	    	let getMemCode = e.parentElement.parentElement.firstElementChild.firstElementChild.value;
 	    	let price = e;
@@ -143,7 +143,7 @@
 	    			console.log(error);
 	    		}
 	    	});
-	    } */
+	    }
 	    
 	    /* for(let i = 0; i < $('.totalPrice input').length; i++){
 	    	let total = $('.totalPrice input');

@@ -41,7 +41,7 @@
                     </script>
                 </div>
                 <div class="top_box">
-                    <input type="file" webkitdirectory id="excel" value="엑셀변환" style="background-color: #F89E91;">
+                    <input type="button" id="excel" value="엑셀변환" style="background-color: #F89E91;">
                 </div>
             <table class="table board_table">
                 <colgroup>
@@ -89,8 +89,6 @@
             </table>
             <script>
             	$('#excel').on('click',function() {
-            		let sourceVal = document.getElementById("excel").files[0].path;
-            		console.log(sourceVal);
             		let codeList = [];
             		$('input:checkbox[name=ch1]:checked').each(function(index,item) {
             			codeList.push($(this).val());
