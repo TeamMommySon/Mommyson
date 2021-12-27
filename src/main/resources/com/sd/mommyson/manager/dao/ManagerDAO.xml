@@ -93,9 +93,9 @@
 		<id property="memCode" column="MEM_CODE"/>
 		<result property="name" column="NAME"/>
 		<result property="repCount" column="REP_COUNT"/>
-		<collection property="totalPrice" ofType="java.lang.Integer" javaType="list">
+		<!-- <collection property="totalPrice" ofType="java.lang.Integer" javaType="list">
             <result column="TOTAL_PRICE"/>
-        </collection>
+        </collection> -->
 		<collection property="review" resultMap="reviewResultMap"/>
 	</resultMap>
 	
@@ -221,8 +221,6 @@
 			  , C.ENROLL_DATE
 			  , C.IS_DELETED
 			  , C.REP_COUNT
-			  , C.TOTAL_PRICE
-			  <!-- , C.RV_CODE -->
 		   FROM (SELECT 
 		                ROWNUM RNUM
 					  , B.MEM_CODE
@@ -237,8 +235,6 @@
 					  , B.ENROLL_DATE
 					  , B.IS_DELETED
 					  , B.REP_COUNT
-					  , B.TOTAL_PRICE
-					  <!-- , B.RV_CODE -->
 				   FROM (SELECT 
 							   A.MEM_CODE
 							 , A.EMAIL
@@ -252,12 +248,8 @@
 							 , A.ENROLL_DATE
 							 , A.IS_DELETED
 							 , U.REP_COUNT
-							 , OD.TOTAL_PRICE
-							 <!-- , R.RV_CODE -->
 						  FROM MEMBER_TBL A 
-						  JOIN USER_TBL U ON (A.MEM_CODE = U.MEM_CODE)
-						  LEFT JOIN ORDER_TBL OD ON (U.MEM_CODE = OD.MEM_CODE)
-						  <!-- LEFT JOIN REVIEW_TBL R ON (U.MEM_CODE = R.MEM_CODE) -->
+						  LEFT JOIN USER_TBL U ON (A.MEM_CODE = U.MEM_CODE)
 						  <where>
 						  	A.IS_DELETED = 'N' AND
 						  	A.MEM_TYPE = 'user'

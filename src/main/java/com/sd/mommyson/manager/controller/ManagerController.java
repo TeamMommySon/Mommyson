@@ -137,19 +137,19 @@ public class ManagerController {
 		List<MemberDTO> normalMemberList = managerService.selectUser(pagination);
 		System.out.println("리스트 확인 : " + normalMemberList);
 		
-		List<Integer> testList = null;
-		for(MemberDTO mb : normalMemberList) {
-			int value = 0;
-			List<Integer> list = mb.getUser().getTotalPrice();
-			
-			for(int i : list) {
-				value += i;
-			}
-			testList = new ArrayList<>();
-			testList.add(value);
-			
-			mb.getUser().setTotalPrice(testList);
-		}
+//		List<Integer> testList = null;
+//		for(MemberDTO mb : normalMemberList) {
+//			int value = 0;
+//			List<Integer> list = mb.getUser().getTotalPrice();
+//			
+//			for(int i : list) {
+//				value += i;
+//			}
+//			testList = new ArrayList<>();
+//			testList.add(value);
+//			
+//			mb.getUser().setTotalPrice(testList);
+//		}
 		
 		if(normalMemberList != null) {
 			model.addAttribute("pagination", pagination);
@@ -161,28 +161,34 @@ public class ManagerController {
 	}
 
 	
-//	@PostMapping(value = "totalPrice", produces = "application/json; charset=UTF-8")
-//	@ResponseBody
-//	public int totalPrice(@RequestParam("getMemCode") int memCode) {
-//		
-//		System.out.println(memCode);
-//		List<OrderDTO> totalPriceList = managerService.selectTotalPrice(memCode);
-//		System.out.println("totalPriceList : " + totalPriceList);
-//		System.out.println(totalPriceList.size());
-//		
-//		List<Integer> testList = null;
-//		int value = 0;
-//		for(int i = 0; i < totalPriceList.size(); i++) {
-//			
-//			OrderDTO result = totalPriceList.get(i);
-//			value += result.getTotalPrice();
-//		}
-//		
-//		System.out.println("value : " + value);
-//
-//		
-//		return value;
-//	}
+	/**
+	 * 총 주문금액 조회
+	 * @param memCode
+	 * @return
+	 * @author leeseungwoo
+	 */
+	@PostMapping(value = "totalPrice", produces = "application/json; charset=UTF-8")
+	@ResponseBody
+	public int totalPrice(@RequestParam("getMemCode") int memCode) {
+		
+		System.out.println(memCode);
+		List<OrderDTO> totalPriceList = managerService.selectTotalPrice(memCode);
+		System.out.println("totalPriceList : " + totalPriceList);
+		System.out.println(totalPriceList.size());
+		
+		List<Integer> testList = null;
+		int value = 0;
+		for(int i = 0; i < totalPriceList.size(); i++) {
+			
+			OrderDTO result = totalPriceList.get(i);
+			value += result.getTotalPrice();
+		}
+		
+		System.out.println("value : " + value);
+
+		
+		return value;
+	}
 	
 	/* 회원삭제 */
 	/**
@@ -2519,6 +2525,12 @@ public class ManagerController {
 				xssfCell.setCellValue(taxList.get(i).getEmail());
 			}
 			
+			String filePath = "C:\\download\\";
+			
+			File mkdir = new File(filePath);
+			if(!mkdir.exists()) {
+				mkdir.mkdirs();
+			}
 			
 			String localFile = "C:\\download\\" + "전자세금계산서_" + today + ".xlsx";
 			
@@ -2530,8 +2542,6 @@ public class ManagerController {
 			if (xssfWb != null)	xssfWb.close();
 			if (fos != null) fos.close();
 			
-			//ctx.put("FILENAME", "입고상세출력_"+ mapList.get(0).get("PRINT_DATE"));
-			//if(file != null) file.deleteOnExit();
 		} catch(Exception e) {
         	
 		} finally {

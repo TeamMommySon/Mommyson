@@ -38,7 +38,7 @@
 	                    <col width=""/>
 	                    <col width=""/>
 	                    <col width=""/>
-	                    <col width=""/>
+	                    <%-- <col width=""/> --%>
 	                </colgroup>
 	                <thead style="background-color: #EDEDED;">
 		                <tr>
@@ -49,7 +49,7 @@
 		                    <th>이메일</th>
 		                    <th>가입일</th>
 		                    <th>가게</th>
-		                    <th>상태</th>
+		                    <!-- <th>상태</th> -->
 		                    <th>-</th>
 		                </tr>
 	                </thead>
@@ -63,7 +63,7 @@
 		                        <td>${ nm.email }</td>
 		                        <td>${ nm.enrollDate }</td>
 		                        <td>${ nm.ceo.store.storeName }</td>
-		                        <td>${ nm.ceo.store.membershipAndStore.membership.msType }</td>
+		                        <%-- <td>${ nm.ceo.store.membershipAndStore.membership.msType }</td> --%>
 		                        <td>
 		                        	<a href="javascript:void(0);" onclick="clickDetailInfo(this);" data-toggle="modal" data-target="#exampleModal">[상세보기]</a>
 	                        	</td>
@@ -149,12 +149,12 @@
                                 <th>결제금액</th>
                                 <td class="infoPaymentPrice"></td>
                             </tr>
-                            <tr>
+                           <!--  <tr>
                                 <th></th>
                                 <td></td>
                                 <th class="infoPaymentAllPrice">총 결제금액</th>
                                 <td></td>
-                            </tr>
+                            </tr> -->
                         </tbody>
                     </table>
                 </div>
