@@ -125,7 +125,7 @@
               </ul>
           </div>
         </div>
-      </div>  
+      </div>
     </header>
     <nav class="navbar navbar-expand-lg navbar-light bg-light at-container" style="margin: 0 auto;">
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
