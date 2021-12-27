@@ -332,7 +332,7 @@
 		 var idCheckResult = $("#idCheckResult");
 			 
 			 if(inputId == ""){
-				 idCheckResult.html("아이디를 입력하신 후 중북확인 버튼을 클릭해주세요.");
+				 idCheckResult.html("아이디를 입력하신 후 중복 확인 버튼을 클릭해주세요.");
 				 idCheckResult.attr("class", "incorrect");
 				 return false;
 				 
@@ -397,11 +397,13 @@
 	        				
 	        				if(result !=null){
 	        					$('#idChkHd').attr("value","Y");
-	        					alert("사용 가능한 아이디 입니다.")
+	        					alert("사용가능한 아이디입니다.");
+	        					idCheckResult.html("");
 	        					return true;
 	        				
 	        				} else { 
-	        					alert("아이디 형식이 올바르지 않습니다. 아이디는 영문 소문자로 시작해야하며, 숫자와 혼합하여 4~12글자로 작성해야합니다.")
+	        					idCheckResult.html("아이디 형식이 올바르지 않습니다. 아이디는 알파벳 소문자, 숫자를 혼합하여 4~12 글자로 작성해주세요.");
+	       					 	idCheckResult.attr("class", "incorrect");
 	        					return false;
 	        				} 
 	        			}
@@ -479,7 +481,7 @@
        	var inputName = $("#name").val();
        	var regex = /^[가-힣]{2,}$/;
        	var result = regex.exec(inputName);
-       	var nameCheckResult = $("#nameCheckResult")
+       	var nameCheckResult = $("#nameCheckResult");
        	
        	if(inputName == ""){
        		nameCheckResult.html("대표자명을 입력해주세요.");

@@ -36,11 +36,13 @@
         <input type="hidden" name="email" id="email">
         <input type="password" class="pwd1" id="pwd1" name="memPwd" placeholder="비밀번호는 [영문,숫자,특수기호] 4~12글자"
         style=" border-radius: 9px; width: 440px; height: 40px;">
-        <br><br>
+        <br>
+        <span id="pwd1CheckResult"></span>
+        <br>
         <input type="password" class="pwd2" id="pwd2" placeholder="비밀번호를 확인해주세요"
 		style=" border-radius: 9px; width: 440px; height: 40px;">
         <br>
-        <span id="pwdCheckResult"></span>
+        <span id="pwd2CheckResult"></span>
         <br><br>
         <button type="submit" id="changePwd"
          style="width:100px; height:40px; border-radius: 9px; background-color:rgb(247, 170, 145); text-align : center;">변경</button>
@@ -62,19 +64,23 @@
        	var inputPwd = $("#pwd1").val();
       		var regex = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{4,12}$/;
       		var result = regex.exec(inputPwd);
+      		var pwd1CheckResult = $("#pwd1CheckResult");
 
       		
       			if(inputPwd == ""){
-      				alert("비밀번호를 입력해주세요.");
+      				pwd1CheckResult.html("비밀번호를 입력해주세요.");
+	        		pwd1CheckResult.attr("class", "incorrect");
 	        		return false;
       				
       			} else {
       				
       				if(result != null){
+      					pwd1CheckResult.html("");
 	        			return true;
 	        			
 	        		} else {
-	        			alert("비밀번호 형식이 올바르지 않습니다. 비밀번호는 알파벳과 특수기호 !@#$%^*+=- 와 숫자를 혼합하여 4~12글자를 작성해주세요 ");
+	        			pwd1CheckResult.html("비밀번호 형식이 올바르지 않습니다. 비밀번호는 알파벳과 특수기호 !@#$%^*+=- 와 숫자를 혼합하여 4~12글자를 작성해주세요 ");
+	        			pwd1CheckResult.attr("class", "incorrect");
 	        			return false;
 	        		}
       				
@@ -83,31 +89,32 @@
        
        
        
-       /* 비밀번호2 클릭시 입력 여부 확인 알럿 & 일치 여부 확인 */
-       $("#pwd2").blur(function(){
-      	 
-      	 var inputPwd1 = $("#pwd1").val();
-      	 var inputPwd2 = $("#pwd2").val();
-   	 	 var pwdCheckResult = $("#pwdCheckResult");
-      	 
-      	 if(inputPwd2 == "") {
-			alert("비밀번호를 확인해주세요.");
-			return false;
-			
-      	 }	else {
-      		 
-	        	if(inputPwd1 != inputPwd2){
-	        		pwdCheckResult.html("비밀번호가 일치하지않습니다. 비밀번호를 동일하게 입력해주세요.");
-	        		pwdCheckResult.attr("class", "incorrect");
-	        		return false;
-	        		
-	        	} else {
-	        		pwdCheckResult.html("비밀번호가 일치합니다.");
-	        		pwdCheckResult.attr("class", "correct");
-	        		return true;
-	        	}
-      		 }	
-      }); 
+        /* 비밀번호 입력 여부 확인 알럿 & 일치 여부 확인 */
+        $("#pwd2").blur(function(){
+       	 
+       	 var inputPwd1 = $("#pwd1").val();
+       	 var inputPwd2 = $("#pwd2").val();
+    	 	 var pwd2CheckResult = $("#pwd2CheckResult");
+       	 
+       	 if(inputPwd2 == "") {
+       		pwd2CheckResult.html("비밀번호를 확인해주세요.");
+       		pwd2CheckResult.attr("class", "incorrect");
+ 			return false;
+ 			
+       	 }	else {
+       		 
+ 	        	if(inputPwd1 == inputPwd2){
+ 	        		pwd2CheckResult.html("비밀번호가 일치합니다.");
+ 	        		pwd2CheckResult.attr("class", "correct");
+ 	        		return true;
+ 	        		
+ 	        	} else {
+ 	        		pwd2CheckResult.html("비밀번호가 일치하지않습니다. 비밀번호를 동일하게 입력해주세요.");
+ 	        		pwd2CheckResult.attr("class", "incorrect");
+ 	        		return false;
+ 	        	}
+       		 }	
+       });
        
        
        

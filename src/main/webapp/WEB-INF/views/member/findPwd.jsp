@@ -116,14 +116,18 @@
 	   var emailCode ="";
         
 	    $("#submit").click(function(){
-	    
+	    	
         	var email = $("#email").val();
+        	var codeCheckResult = $("#codeCheckResult"); // 비교결과 
         	
         	if(email == ""){
-        		alert("이메일을 입력해주세요.");
+        		codeCheckResult.html("이메일을 입력해주세요.");
+        		codeCheckResult.attr("class", "incorrect");
         		return false; 
         		
         	} else {
+        		codeCheckResult.html("");
+        		alert("이메일 인증번호를 발송했습니다. 인증번호를 입력해주세요.")
          		$.ajax({
          			type:"post",
          			url:"find_pass.do",
