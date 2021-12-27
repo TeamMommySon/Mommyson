@@ -14,7 +14,14 @@
 <link rel="stylesheet" type="text/css"href="${ pageContext.servletContext.contextPath }/resources/css/colorset.css">
 <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 <script	src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-fQybjgWLrvvRgtW6bFlB7jaZrFsaBXjsOMm/tB9LTS58ONXgqbR9W8oWht/amnpF"crossorigin="anonymous"></script>
-
+<style>
+    .correct {
+    color : green;
+    }
+     .incorrect {
+    color : red;
+    }
+</style>
 </head>
 <body>
 	<div class="center">
@@ -25,11 +32,13 @@
 			src="${ pageContext.servletContext.contextPath }/resources/images/logo.png">
 		<br>
 			<input type="text" class="name" id="name" name="name" placeholder=" 이름(한글 2글자 이상)" style="border-radius: 9px;"> 
-			<br><br>
-			
+			<br>
+           	<span id="nameCheckResult"></span>
+            <br>		
 		 	<input type="email" class="email" id="email" name="email" placeholder=" 이메일(@를 포함)"> 
-			<br><br>
-
+			<br>
+           	<span id = "emailCheckResult"></span>
+            <br>
 	 		<button type="submit" class="btn btn-primary"  id="findIdButton" onclick="findIdButton1()"
 				style="width: 100px; height: 40px; border-radius: 9px; 
 				background-color: rgb(247, 170, 145); color: black; border: 2px solid black;">아이디찾기</button> 
@@ -44,44 +53,52 @@
 			var inputName = $("#name").val();
 			var regex = /^[가-힣]{2,}$/;
 			var result = regex.exec(inputName);
+			var nameCheckResult = $("#nameCheckResult");
 				
 			if(inputName == ""){
-				alert("이름을 입력해주세요.");
+				nameCheckResult.html("이름을 입력해주세요.");
+				nameCheckResult.attr("class", "incorrect");
 				return false;
 
 			} else {
 				if(result != null) {
+					nameCheckResult.html("");
 					return true;
 					
 				} else {
-					alert("이름 형식이 올바르지 않습니다. 이름은 한글로 2글자 이상 입력해주세요. ");
-						return false;
+					nameCheckResult.html("이름 형식이 올바르지 않습니다. 이름은 한글로 2글자 이상 입력해주세요. ");
+					nameCheckResult.attr("class", "incorrect");
+	       		 	return false;	 
 				} 
 			}				
 		});
 		
 		/* 이메일 입력 여부 확인 & 정규식 확인 */
-		$("#email").blur(function(){
-			var inputEmail = $("#email").val();
-			var regex = /.+@[a-z]+(\.[a-z]+){1,2}$/;
-			var result = regex.exec(inputEmail);
-			
-			if(inputEmail == ""){
-				alert("이메일을 입력해주세요.");
-				return false;
-				
-			} else {
-				
-				if(result != null) {
-					return true;
-					
-				} else {
-					alert("이메일 형식이 올바르지않습니다. @를 포함하여 올바른 형식으로 작성해주세요.");
-	 				return false;
-				}
-			}
-			
-		});
+	       $("#email").blur(function(){
+				var inputEmail = $("#email").val();
+				var regex = /.+@[a-z]+(\.[a-z]+){1,2}$/;
+			 	var result = regex.exec($('#email').val());
+			 	var emailCheckResult = $("#emailCheckResult");
+			 	
+			 		if(inputEmail == ""){
+			 			emailCheckResult.html("이메일을 입력해주세요.");
+			 			emailCheckResult.attr("class", "incorrect");
+			 			return false;
+			 			
+			 		} else {
+			 			
+			 			if(result != null){
+			 				emailCheckResult.html("");
+			 				return true;
+			 				
+			 			} else {
+			 				emailCheckResult.html("이메일 형식이 올바르지않습니다. @를 포함하여 올바른 형식으로 작성해주세요.");
+			 				emailCheckResult.attr("class", "incorrect");
+			 				return false;
+			 			}
+			 		}
+	       	
+	       });
 		
 		
 	  

@@ -1,3 +1,4 @@
+
 package com.sd.mommyson.user.controller;
 
 import java.io.File;
@@ -1336,35 +1337,36 @@ public class UserController {
 	 * @return "user/shoppingBasket"
 	 */
 	@RequestMapping("insertCart")
-	public String insertCart(@RequestParam("amount") int amount, @RequestParam("sdCode") int sdCode, @RequestParam("price") int price, HttpSession session) {
-
+	public String insertCart(@RequestParam("amount") int amount, @RequestParam("sdCode") int sdCode, 
+			@RequestParam("price") int price, HttpSession session) {
+		
 		System.out.println("amount : " + amount);
 		System.out.println("sdCode : " + sdCode);
 		System.out.println("price : " + price);
-
+		
 		MemberDTO member = (MemberDTO) session.getAttribute("loginMember");
 		System.out.println("member :" + member);
-
+	
 		HashMap<String,Integer> order = new HashMap<String,Integer>();
 		order.put("sdCode", sdCode);
 		order.put("amount", amount);
 		order.put("memCode", member.getMemCode());
 		order.put("totalPrice", price*amount);
 		System.out.println("order : " + order);
-
+		
 		int count = userService.selectCountCart(order); //장바구니에 기존 상품이 있는지 조회 
 		System.out.println("count : " + count);
-
+		
 		if(count == 0) {
 			userService.insertCart(order); // 장바구니에 상품이 0개이면 insert  
 		} else {
 			userService.updateCart(order); // 장바구니에 상품이 0개이상이면 update 
 		}
-
+				
 		return "redirect:/user/cart";
-
+	
 	}
-
+	
 
 	/**
 	 * 장바구니 리스트 조회 
@@ -1374,22 +1376,22 @@ public class UserController {
 	 * @return "user/shoppingBasket"
 	 */
 	@GetMapping("cart")
-	public String cart(Model model,  HttpSession session) {
-
-		MemberDTO member = (MemberDTO)session.getAttribute("loginMember"); 
-		System.out.println("member : " + member);
-
-		List<CartDTO> cartList = userService.cartList(member);
-
-		HashMap<String,Object> map = new HashMap<String,Object>();
-		map.put("cartList", cartList); 
-		System.out.println("map : " + map);
-
-		model.addAttribute("map", map);
-		System.out.println("model : " + model);
+		public String cart(Model model,  HttpSession session) {
+			
+			MemberDTO member = (MemberDTO)session.getAttribute("loginMember"); 
+			System.out.println("member : " + member);
+			
+			List<CartDTO> cartList = userService.cartList(member);
+						
+			HashMap<String,Object> map = new HashMap<String,Object>();
+			map.put("cartList", cartList); 
+			System.out.println("map : " + map);
+			
+			model.addAttribute("map", map);
+			System.out.println("model : " + model);
 		return "user/shoppingBasket";
 	}
-
+	
 	/**
 	 * 장바구니 상품 삭제하기 
 	 * @author ParkHaejin
@@ -1400,40 +1402,40 @@ public class UserController {
 	 */
 	@GetMapping("deleteCart")
 	public String deleteCart(Model model, HttpSession session, @RequestParam(value = "deleteList", required = false) int[] deleteList){
-
+		
 		MemberDTO member = (MemberDTO)session.getAttribute("loginMember");
 		int memCode = member.getMemCode();
 		System.out.println("memCode : " + memCode);
-
+		
 		System.out.println("deleteList : " + deleteList);
 		System.out.println("deleteList : " + deleteList[0]);
 		System.out.println("deleteList : " + deleteList.length);
-
+		
 		List<Integer> deleteCartList = new ArrayList<>();
-
+		
 		for(int i = 0; i < deleteList.length; i++) {
 			deleteCartList.add(deleteList[i]); 
-
+	
 		}
-
+		
 		System.out.println("deleteCartList : " + deleteCartList);
-
+		
 		HashMap<String,Object> deleteCartProduct = new HashMap<String,Object>();
 		deleteCartProduct.put("deleteCartList", deleteCartList);
 		deleteCartProduct.put("memCode", memCode);
-
+		
 		int result = userService.deleteCartList(deleteCartProduct);
 		System.out.println("result : " + result);
-
+		
 		if(result > 0) {
 			System.out.println("deleteCartList Service성공");
 		} else {
 			System.out.println("deleteCartList Service실패");
 		}
-
+		
 		return "redirect:/user/cart";
 	}
-
+	
 	/**
 	 * 방문포장 버튼 누르면 주문 정보 insert, select
 	 * @author shinhyungi,haejinpark,kimjuhwan
@@ -1445,82 +1447,86 @@ public class UserController {
 	 * @return
 	 */
 	@GetMapping("packagePay")
-	public String packagePay(Model model, HttpSession session, @RequestParam(value = "orderList", required = false) int[] orderPrice, @RequestParam(value="storeCode",required = false) int[] storeCode
-			, @RequestParam String[] storeName, @RequestParam int[] sdCode, @RequestParam String[] sdName, @RequestParam int[] amount) {
+	   public String packagePay(Model model, HttpSession session, @RequestParam(value = "orderList", required = false) int[] orderPrice, 
+			   @RequestParam(value="storeCode",required = false) int[] storeCode , @RequestParam String[] storeName
+	         , @RequestParam int[] sdCode, @RequestParam String[] sdName, @RequestParam int[] amount) {
 
+	
+	      MemberDTO member = (MemberDTO)session.getAttribute("loginMember"); 
+	      int memCode = member.getMemCode();
+	      
+	      System.out.println("memCode : " + memCode);
+	      
+	      System.out.println("orderPrice : " + orderPrice);
+	      System.out.println("orderPrice : " + orderPrice[0]);
+	      System.out.println("orderPrice : " + orderPrice.length);
+	      
+	      
+	      List<Integer> packagePayList = new ArrayList<>();
+	      
+	      for(int i = 0; i < orderPrice.length; i++) {
+	         packagePayList.add(orderPrice[i]);
+	      }
+	      
+	      System.out.println("packagePayList : " + packagePayList);
+	      
 
-		MemberDTO member = (MemberDTO)session.getAttribute("loginMember"); 
-		int memCode = member.getMemCode();
+	      for(int sc : storeCode) {
+	         System.out.println("storeCode : " + sc);
+	      }
+	      
+	      for(String st : storeName) {
+	         System.out.println("storeName : " + storeName);
+	      }
+	      
+		  for(int sdCode2 : sdCode) {
+			  System.out.println("sdCode : " + sdCode2);
+		  }
+		
+		  for(String sdName2 : sdName) {
+			  System.out.println("sdName : " + sdName2);
+		  }
+		  
+	      for(int amount2 : amount) {
+	    	  System.out.println("amount : " + amount2);
+	      }
+	      
 
-		System.out.println("memCode : " + memCode);
-
-
-		System.out.println("orderPrice : " + orderPrice);
-		System.out.println("orderPrice : " + orderPrice[0]);
-		System.out.println("orderPrice : " + orderPrice.length);
-
-
-		List<Integer> packagePayList = new ArrayList<>();
-
-		for(int i = 0; i < orderPrice.length; i++) {
-			packagePayList.add(orderPrice[i]);
-		}
-
-		System.out.println("packagePayList : " + packagePayList);
-
-
-		for(int sc : storeCode) {
-			System.out.println("storeCode : " + sc);
-		}
-
-		for(String st : storeName) {
-			System.out.println("storeName : " + storeName);
-		}
-
-		for(int sdCode2 : sdCode) {
-			System.out.println("sdCode : " + sdCode2);
-		}
-
-		for(String sdName2 : sdName) {
-			System.out.println("sdName : " + sdName2);
-		}
-
-		for(int amount2 : amount) {
-			System.out.println("amount : " + amount2);
-		}
-
-
-		HashMap<String, Object> insertPackage = new HashMap<String, Object>();
-		insertPackage.put("memCode", memCode);
-		insertPackage.put("packagePayList", packagePayList);
-		insertPackage.put("storeCode", storeCode);
-		insertPackage.put("storeName", storeName);
-		insertPackage.put("sdCode", sdCode);
-		insertPackage.put("sdName", sdName);
-		insertPackage.put("amount", amount);
-
-
-		Map<String,Object> result = userService.insertPackageOrderList(insertPackage);
-		System.out.println("result : " + result);
-		if ((int)result.get("result") > 0 ) {
-			System.out.println("insertPackage Service 성공");
-		} else {
-			System.out.println("insertPackage Service 실패");
-		}
-
-		// 주문 내역 및 쿠폰 가져오기
-		List<Integer> orderCodes =  (List<Integer>) result.get("orderCodes");
-		List<Map<String, String>> orderList = userService.selectOrderList(orderCodes); 
-		model.addAttribute("orderList", orderList);
-		List<CouponDTO> couponList = userService.selectCouponList(member.getMemCode());
-		model.addAttribute("couponList", couponList);
-
-		for(CouponDTO c : couponList) {
-			System.out.println("coupon : " + c);
-		}
-
-		return "user/packagePay";
-	}
+	      HashMap<String, Object> insertPackage = new HashMap<String, Object>();
+	      insertPackage.put("memCode", memCode);
+	      insertPackage.put("packagePayList", packagePayList);
+	      insertPackage.put("storeCode", storeCode);
+	      insertPackage.put("storeName", storeName);
+	      insertPackage.put("sdCode", sdCode);
+	      insertPackage.put("sdName", sdName);
+	      insertPackage.put("amount", amount);
+	      
+	      
+	      Map<String,Object> result = userService.insertPackageOrderList(insertPackage);
+	      System.out.println("result : " + result);
+	      if ((int)result.get("result") > 0 ) {
+	         System.out.println("insertPackage Service 성공");
+	      } else {
+	         System.out.println("insertPackage Service 실패");
+	      }
+	      
+	      // 주문 내역 및 쿠폰 가져오기
+	      List<Integer> orderCodes =  (List<Integer>) result.get("orderCodes");
+	      List<Map<String, String>> orderList = userService.selectOrderList(orderCodes); 
+	      model.addAttribute("orderList", orderList);
+	      List<CouponDTO> couponList = userService.selectCouponList(member.getMemCode());
+	      model.addAttribute("couponList", couponList);
+	      
+	      for(CouponDTO c : couponList) {
+	         System.out.println("coupon : " + c);
+	      }
+	      
+	      return "user/packagePay";
+	   }
+	
+	
+	
+	
 	
 	/**@author ShinHyungi , ParkHaejin
 	 * 포장 주문 시작할 때 생성된 주문 업데이트 & 방문포장 결제 완료 조회
@@ -1574,9 +1580,10 @@ public class UserController {
 			
 			
 			return "user/packageOrderComplete";
-	}
+		}
+	
 
-
+	
 	/**
 	    * 배달 버튼 누르면 장바구니 정보 insert 
 	    * @author leeseungwoo
@@ -1589,7 +1596,8 @@ public class UserController {
 	    * */
 	   @GetMapping("deliveryPay")
 	   public String deliveryPay(Model model, HttpSession session, @RequestParam(value = "orderList", required = false) int[] orderList, 
-	         @RequestParam(value="storeCode",required = false) int[] storeCode, @RequestParam String[] storeName, @RequestParam int[] sdCode, @RequestParam String[] sdName, @RequestParam int[] amount) {
+	         @RequestParam(value="storeCode",required = false) int[] storeCode, @RequestParam String[] storeName, 
+	         @RequestParam int[] sdCode, @RequestParam String[] sdName, @RequestParam int[] amount) {
 
 	      MemberDTO member = (MemberDTO)session.getAttribute("loginMember"); 
 	      int memCode = member.getMemCode();
@@ -1659,6 +1667,7 @@ public class UserController {
 	      return "user/deliveryPay";
 	      
 	   }
+	
 	
 	/**
 	    * 배달주문 결제 시 주문내역 업데이트

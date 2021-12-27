@@ -43,9 +43,7 @@
     	</collection>
     </resultMap>
     
-
-	
-    <resultMap type="com.sd.mommyson.user.dto.CartDTO" id="cartResultMap">
+<resultMap type="com.sd.mommyson.user.dto.CartDTO" id="cartResultMap">
     	<id property="cartCode" column="CART_CODE"/>
     	<result property="memCode" column="MEM_CODE"/>
     	<result property="amount" column="AMOUNT"/>
@@ -135,6 +133,15 @@
 		<result property="lastLogin" column="LAST_LOGIN"/>
 		<association property="authDTO" resultMap="authResultMap"/>
 	</resultMap>
+	
+	
+<resultMap type="com.sd.mommyson.member.dto.MemberDTO" id="memberResultMap2">
+       <id property="memCode" column="MEM_CODE"/>
+       <result property="address" column="ADDRESS"/>
+       <result property="postCode" column="POST_CODE"/>
+       <result property="dAddress" column="D_ADDRESS"/>
+    </resultMap>
+
 	
     <!-- 공지사항 출력 및 검색 -->
     <select id="selectNotice" resultMap="postResultMap">
@@ -718,7 +725,7 @@
     	   AND A.SD_CODE = #{ sdCode }
     </select>
     
-   <!--  장바구니 상품 조회   -->
+ <!--  장바구니 상품 조회   -->
     <select id="selectCountCart" resultType="_int"> 
     	SELECT COUNT(*)
     	  FROM CART_TBL
@@ -853,6 +860,9 @@
     <select id="selectLastOrderCode" resultType="_int">
     	SELECT SEQ_ORDER_CODE.CURRVAL FROM DUAL
     </select>
+    
+    
+  
     
     <!-- 결제취소 -->
     <delete id="deleteOrder" parameterType="list">
@@ -991,7 +1001,7 @@
 			 </foreach>
 			 )
 		
-	</select> 
+	</select>
 
     <insert id="insertReport">
     	INSERT
@@ -1324,4 +1334,14 @@
     	)
     </insert>
     
+    <select id="selectMemberAddress" resultMap="memberResultMap2" parameterType="_int">
+       SELECT
+              ADDRESS
+            , POST_CODE
+            , D_ADDRESS
+         FROM MEMBER_TBL
+        WHERE MEM_CODE = #{ memCode }
+    </select>
+    
+
     </mapper>

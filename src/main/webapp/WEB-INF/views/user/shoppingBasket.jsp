@@ -27,12 +27,12 @@
  	<form method="post">
 	    <table id="table1">
 	      <tr id="tr1">
-	        <th><input type=checkbox id="all"></th>
+	        <th style="padding-left: 2%"><input type=checkbox id="all" ></th>
 	        <th>가게 정보</th>
 	        <th>제품 정보</th>
 	        <th>제품 금액</th>
 	        <th>수량</th>
-	        <th>총 제품 금액</th>
+	        <th style="padding-left: 2%;" >총 제품 금액</th>
 	      </tr>
 	      </table>
 	      
@@ -92,9 +92,11 @@
 	<script>
 
 	
+
+	
 	/* 수량증감에따라 totalCount 변경 */
 
-    $(function(){
+    /* $(function(){
        
 	     	var stat = $('#numberUpDown').text();
 	      	var num = parseInt(stat,10);
@@ -135,7 +137,7 @@
 	  });
 	    
 	    
-	});  
+	});   */
 	
 	  /* 전체 체크, 해제 */
 	  $("#all").click(function(){
