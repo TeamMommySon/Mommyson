@@ -2319,7 +2319,7 @@ public class ManagerController {
         sheet.setColumnWidth(8, (sheet.getColumnWidth(8))+(short)2048);
         sheet.setColumnWidth(9, (sheet.getColumnWidth(9))+(short)2048);
         sheet.setColumnWidth(10, (sheet.getColumnWidth(10))+(short)3052);
-        sheet.setColumnWidth(11, (sheet.getColumnWidth(11))+(short)3052);
+        sheet.setColumnWidth(11, (sheet.getColumnWidth(11))+(short)3500);
         sheet.setColumnWidth(12, (sheet.getColumnWidth(12))+(short)2048);
         
         // 큰 컬럼
@@ -2332,7 +2332,7 @@ public class ManagerController {
 		cellStyle_Table_Center.setBorderLeft(BorderStyle.THIN); //테두리 왼쪽
 		cellStyle_Table_Center.setBorderRight(BorderStyle.THIN); //테두리 오른쪽
 		cellStyle_Table_Center.setAlignment(HorizontalAlignment.CENTER);
-		cellStyle_Table_Center.setFillForegroundColor(HSSFColor.LIGHT_TURQUOISE.index);;
+		cellStyle_Table_Center.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
 		cellStyle_Table_Center.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
 		// 1.row에 시트를 생성
 		row = sheet.createRow(0);
@@ -2385,7 +2385,7 @@ public class ManagerController {
 
 		FileOutputStream fileOutPut;
 		try {
-			fileOutPut = new FileOutputStream("C:\\Download\\전자세금_" + today + taxList.hashCode() + ".xlsx");
+			fileOutPut = new FileOutputStream("C:\\Download\\전자세금_" + today + "_" + taxList.hashCode() + ".xlsx");
 			// 4.데이터까지 Add된 파일을 쓴다.
 			workBook.write(fileOutPut);
 			// 5. fileOutPut 닫아준다.
