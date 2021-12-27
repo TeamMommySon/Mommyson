@@ -79,7 +79,7 @@
                                         readImage(e.target)//위에 있는 함수 통해서 
                                     })
 
-                                    // 저장 버튼 클릭 시 리뷰 사진 등록 (ajax로 수정해야함)//모달창 밖의 이미지가 변함
+                                    // 저장 버튼 클릭 시 리뷰 사진 등록 //모달창 밖의 이미지가 변함
 									//프리뷰 이미지값 변환
                                     $('#save_img').on('click',function() {
                                         let img = $('#preview-image').attr('src')
