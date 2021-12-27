@@ -100,14 +100,17 @@ public class OwnerController {
 			
 			int status = 0;
 			
-			for(ProductDTO i : proList) {
+			if(proList != null && !proList.isEmpty()) {
 				
-				if(i.geteDate().before(today) && !i.getOrderableStatus().equals("X")) {
+				for(ProductDTO i : proList) {
 					
-					 status += ownerService.modifyEDateStatus(i.getSdCode());
+					if(i.geteDate().before(today) && !i.getOrderableStatus().equals("X")) {
+						
+						 status += ownerService.modifyEDateStatus(i.getSdCode());
+						
+					}
 					
 				}
-				
 			}
 			
 			System.out.println(status + "행 업데이트 성공!");
@@ -1023,10 +1026,6 @@ public class OwnerController {
 		
 		System.out.println(today);
 		
-		
-		MembershipAndStoreDTO memberShip = ownerService.selectMembershipAndStore(memCode);
-		
-		
 		Map<String, Object> info = new HashMap<String, Object>();
 		
 		info.put("msCode", msCode);
@@ -1039,6 +1038,8 @@ public class OwnerController {
 		successInfo.put("price",price);
 		successInfo.put("payDate",today);
 		
+		MembershipAndStoreDTO memberShip = (MembershipAndStoreDTO)model.getAttribute("memberShip");
+		 
 		if(memberShip == null) {
 			
 			int insertMembership = ownerService.registMembership(info);

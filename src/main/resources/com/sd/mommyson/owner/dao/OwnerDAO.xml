@@ -461,7 +461,7 @@
 	</update>
 	
 	<!-- 사업자 비밀번호 변경 쿼리문 -->
-	<update id="modifyPwd">
+	<update id="-">
 		UPDATE MEMBER_TBL
 		   SET MEM_PWD = #{ memPwd }
 		 WHERE MEM_CODE = #{ memCode }   
