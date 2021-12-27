@@ -207,13 +207,23 @@ public class UserServiceImpl implements UserService{
 	      int[] storeCode = (int[])insertPackage.get("storeCode");
 	      
 	      String[] storeName = (String[])insertPackage.get("storeName");
+
+	      int[] sdCode = (int[])insertPackage.get("sdCode");
+
+	      String[] sdName = (String[])insertPackage.get("sdName");
+
+	      int[] amount = (int[])insertPackage.get("amount");
+	      
 	      List<Integer> orderCodes = new ArrayList<>();
 	      for(int i = 0; i< price.size(); i++) {
 	         
+	    	 map.put("memCode", insertPackage.get("memCode"));
 	         map.put("price", price.get(i));
 	         map.put("storeCode",storeCode[i]);
 	         map.put("storeName", storeName[i]);
-	         map.put("memCode", insertPackage.get("memCode"));
+	         map.put("sdCode", sdCode[i]);
+	         map.put("sdName", sdName[i]);
+	         map.put("amount", amount[i]);
 	         
 	         int success = userDAO.insertPackageOrderList(map);
 	         orderCodes.add(userDAO.selectLastOrderCode());
@@ -230,58 +240,87 @@ public class UserServiceImpl implements UserService{
 	   }
 
 	
-	/* 배달 주문리스트 저장 */
-	@Override
-	public Map<String,Object> insertDeliveryOrderList(HashMap<String, Object> insertDelivery) {
+	   /* 배달 주문리스트 저장 */
+		@Override
+		public Map<String, Object> insertDeliveryOrderList(HashMap<String, Object> insertDelivery) {
 
-		int result = 0;
-		
-		Map<String, Object> map = new HashMap<String, Object>();
-		
-		List<Integer> totalPrice = (List<Integer>)insertDelivery.get("deliveryPayList");
-		int[] storeCode = (int[])insertDelivery.get("storeCode");
-		String[] storeName = (String[])insertDelivery.get("storeName");
-		
-		List<Integer> orderCodes = new ArrayList<>();
-		List<Integer> storeCodes = new ArrayList<>();
-		for(int i = 0; i < totalPrice.size(); i++) {
-			map.put("totalPrice", totalPrice.get(i));
-			map.put("storeCode", storeCode[i]);
-			map.put("storeName", storeName[i]);
-			map.put("memCode", insertDelivery.get("memCode"));
+			int result = 0;
 			
-			int success = userDAO.insertDeliveryOrderList(map);
-			if(success > 0) {
-				result += 1;
-			}
-			orderCodes.add(userDAO.selectLastOrderCode());
-			storeCodes.add((Integer) map.get("storeCode"));
-		}
-		
-		Map<String,Object> resultMap = new HashMap<>();
-	    resultMap.put("result", result);
-	    resultMap.put("orderCodes", orderCodes);
-	    resultMap.put("storeCodes", storeCodes);
-	    
-		return resultMap;
-	}
+			Map<String, Object> map = new HashMap<String, Object>();
+			
+			List<Integer> price = (List<Integer>)insertDelivery.get("deliveryPayList");
+			
+			int[] storeCode = (int[])insertDelivery.get("storeCode");
+			
+			String[] storeName = (String[])insertDelivery.get("storeName");
+			
+	        int[] sdCode = (int[])insertDelivery.get("sdCode");
 
+	        int[] amount = (int[])insertDelivery.get("amount");
+	      
+	        String[] sdName = (String[])insertDelivery.get("sdName");
+	        
+			
+		      List<Integer> orderCodes = new ArrayList<>();
+
+		      for(int i = 0; i< price.size(); i++) {
+		         
+		    	 map.put("memCode", insertDelivery.get("memCode"));
+		         map.put("price", price.get(i));
+		         map.put("storeCode",storeCode[i]);
+		         map.put("storeName", storeName[i]);
+		         map.put("sdCode", sdCode[i]);
+		         map.put("sdName", sdName[i]);
+		         map.put("amount", amount[i]);
+				
+				int success = userDAO.insertDeliveryOrderList(map);
+				orderCodes.add(userDAO.selectLastOrderCode());
+				if(success > 0) {
+					result += 1;
+				}
+			
+			
+			}
+		      Map<String,Object> resultMap = new HashMap<>();
+		      resultMap.put("result", result);
+		      resultMap.put("orderCodes", orderCodes);
+		      
+		      return resultMap;     
+		}
+
+	
+	/**
+	    * 배달주문 결제 시 주문내역 업데이트
+	    * @author leeseungwoo
+	    */
+	   @Override
+	   public int updateOrder2(List<Map<String, Object>> list) {
+	      
+	      int result = 0;
+	      for(int i = 0; i < list.size(); i++) {
+	         System.out.println(list.get(i));
+	         result += userDAO.updateOrder2(list.get(i));
+	      }
+	      System.out.println("service 들어옴 -----------------------" + result);
+	      return result;
+	   }
 	
 	/* 방문포장 결제완료화면 조회 */
 	@Override
-	public List<OrderDTO> selectPackageOrderComplete(HashMap<String, Object> map) {
-		return userDAO.selectPackageOrderComplete(map);
+	public List<Map<String,Object>> selectPackageOrderComplete(List<Map<String, Object>> list) {
+		return userDAO.selectPackageOrderComplete(list);
 	}
 	
 	/* 배달 결제완료화면 조회 */
-
+	@Override
+	public List<Map<String, Object>> selectDeliveryOrderComplete(List<Map<String, Object>> list) {
+		return userDAO.selectDeliveryOrderComplete(list);
+	}
 
 	@Override
 	public int insertReport(Map<String, Integer> reportInfo) {
 		return userDAO.insertReport(reportInfo);
 	}
-
-
 
 	@Override
 	public Map<String, String> selectStoreInfoByMemcode(int memCode) {
@@ -338,10 +377,6 @@ public class UserServiceImpl implements UserService{
 	}
 
 
-	@Override
-	public void deleteOrder(List<Integer> orderCodeList) {
-		userDAO.deleteOrder(orderCodeList);
-	}
 
 
 	/**@author ShinHyungi
@@ -358,6 +393,11 @@ public class UserServiceImpl implements UserService{
 		}
 		System.out.println("service 들어옴 -----------------------" + result);
 		return result;
+	}
+	
+	@Override
+	public void deleteOrder(List<Integer> orderCodeList) {
+		userDAO.deleteOrder(orderCodeList);
 	}
 
 	@Override
@@ -452,23 +492,6 @@ public class UserServiceImpl implements UserService{
 	public MemberDTO selectMemberAddress(int memCode) {
 		
 		return userDAO.selectMemberAddress(memCode);
-	}
-
-
-	/**
-	 * 배달주문 결제 시 주문내역 업데이트
-	 * @author leeseungwoo
-	 */
-	@Override
-	public int updateOrder2(List<Map<String, Object>> list) {
-		
-		int result = 0;
-		for(int i = 0; i < list.size(); i++) {
-			System.out.println(list.get(i));
-			result += userDAO.updateOrder2(list.get(i));
-		}
-		System.out.println("service 들어옴 -----------------------" + result);
-		return result;
 	}
 
 }

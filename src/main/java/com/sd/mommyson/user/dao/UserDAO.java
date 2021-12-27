@@ -66,14 +66,27 @@ public interface UserDAO {
 	/* 방문포장 주문리스트 저장  */
 	int insertPackageOrderList(Map<String, Object> map);
 	
+	/* 결제 취소 */
+	void deleteOrder(List<Integer> orderCodeList);
+	
+	/* 방문포장 결제 업데이트 */
+	int updateOrder(Map<String, Object> map);
+
+	/* 결제시 쿠폰상태 업데이트 */
+	int updateCouponStatus(List<Integer> list2);
+	
+	/* 방문포장 결제완료화면 조회  */
+	List<Map<String, Object>> selectPackageOrderComplete(List<Map<String, Object>> list);
+
 	/* 배달 주문리스트 저장  */
 	int insertDeliveryOrderList(Map<String, Object> map);
 	
-	/* 방문포장 결제완료화면 조회  */
-	List<OrderDTO> selectPackageOrderComplete(HashMap<String, Object> map);
+	/* 배달 결제 업데이트 */
+	int updateOrder2(Map<String, Object> map);
 	
 	/* 배달 결제완료화면 조회 */
-
+	List<Map<String, Object>> selectDeliveryOrderComplete(List<Map<String, Object>> list);
+	
 	int insertReport(Map<String, Integer> reportInfo);
 
 	Map<String, String> selectStoreInfoByMemcode(int memCode);
@@ -102,12 +115,6 @@ public interface UserDAO {
 
 	List<CouponDTO> selectCouponList(int memCode);
 
-	void deleteOrder(List<Integer> orderCodeList);
-
-	int updateOrder(Map<String, Object> map);
-
-	int updateCouponStatus(List<Integer> list2);
-
 	int registMtmConFile(Map<String, Object> fileInfo);
 
 	int selectMtmTotalCount(Map<String, String> searchMap);
@@ -131,8 +138,6 @@ public interface UserDAO {
 	int updateDelImg(Map<String, Object> delImgInfo);
 
 	MemberDTO selectMemberAddress(int memCode);
-
-	int updateOrder2(Map<String, Object> map);
 
 	void insertRTNotice(Map<String, Object> map);
 

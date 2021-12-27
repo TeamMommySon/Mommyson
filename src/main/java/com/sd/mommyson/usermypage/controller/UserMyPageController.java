@@ -66,9 +66,14 @@ public class UserMyPageController {
 		this.memberService = memberService;
 	}
 	
+	
+	
+	
 	/*주문내역*/
 	@GetMapping(value={"myOrderList","/"})
 	public String myOrderList(HttpSession session, Model mv, @RequestParam(required = false) Map<String,String> parameters) {
+		
+		
 		
 		MemberDTO memberInfo = (MemberDTO) session.getAttribute("loginMember");
 		System.out.println("로그인 멤버: " + memberInfo);

@@ -76,9 +76,9 @@ public class OwnerController {
 		MemberDTO members = (MemberDTO)model.getAttribute("loginMember");
 		int memCode = members.getMemCode();
 		
-		Map<String, Object> membeship = ownerService.selectMembershipInfo(memCode);
+		Map<String, Object> memberShip = ownerService.selectMembershipInfo(memCode);
 		
-		if(membeship != null && !membeship.isEmpty()) {
+		if(memberShip != null && !memberShip.isEmpty()) {
 			
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 			
@@ -88,29 +88,26 @@ public class OwnerController {
 			
 			java.util.Date today = sdf.parse(dd);
 			
-			String startDate = sdf.format(membeship.get("START_DATE"));
-			String endDate = sdf.format(membeship.get("END_DATE"));
+			String startDate = sdf.format(memberShip.get("START_DATE"));
+			String endDate = sdf.format(memberShip.get("END_DATE"));
 			
-			membeship.put("startDate", startDate);
-			membeship.put("endDate", endDate);
+			memberShip.put("startDate", startDate);
+			memberShip.put("endDate", endDate);
 			
-			model.addAttribute("membership",membeship);
+			model.addAttribute("membership",memberShip);
 			
 			List<ProductDTO> proList = ownerService.selectProdoucts(memCode);
 			
 			int status = 0;
 			
-			if(proList != null && !proList.isEmpty()) {
+			for(ProductDTO i : proList) {
 				
-				for(ProductDTO i : proList) {
+				if(i.geteDate().before(today) && !i.getOrderableStatus().equals("X")) {
 					
-					if(i.geteDate().before(today) && !i.getOrderableStatus().equals("X")) {
-						
-						 status += ownerService.modifyEDateStatus(i.getSdCode());
-						
-					}
+					 status += ownerService.modifyEDateStatus(i.getSdCode());
 					
 				}
+				
 			}
 			
 			System.out.println(status + "행 업데이트 성공!");
@@ -1026,6 +1023,10 @@ public class OwnerController {
 		
 		System.out.println(today);
 		
+		
+		MembershipAndStoreDTO memberShip = ownerService.selectMembershipAndStore(memCode);
+		
+		
 		Map<String, Object> info = new HashMap<String, Object>();
 		
 		info.put("msCode", msCode);
@@ -1038,8 +1039,6 @@ public class OwnerController {
 		successInfo.put("price",price);
 		successInfo.put("payDate",today);
 		
-		MembershipAndStoreDTO memberShip = (MembershipAndStoreDTO)model.getAttribute("memberShip");
-		 
 		if(memberShip == null) {
 			
 			int insertMembership = ownerService.registMembership(info);
@@ -1526,7 +1525,8 @@ public class OwnerController {
 	
 	@PostMapping(value="ownerQuitGo", produces="text/plain; charset=UTF-8")
 	@ResponseBody
-	public String ownerQuitGo(@ModelAttribute("loginMember") MemberDTO member ,Model model, @RequestParam("memPwd") String memPwd) throws JsonProcessingException {
+	public String ownerQuitGo(@ModelAttribute("loginMember") MemberDTO member ,Model model, 
+								@RequestParam("memPwd") String memPwd) throws JsonProcessingException {
 		
 		int memCode = member.getMemCode();
 		

@@ -343,7 +343,6 @@ public class MemberController {
 		logger.info("이메일 데이터 전송 확인");
 		logger.info("이메일 : " + email);
 
-
 		/* 인증번호(난수) 생성 */
 		Random random = new Random();
 		int code = random.nextInt(888888) +111111;
@@ -389,8 +388,6 @@ public class MemberController {
 	
 	
 	/* 인증번호를 입력한 후 비밀번호 변경 버튼을 누르면 변경화면으로 이메일값과 이동 */
-	
-	
 	
 	@RequestMapping(value ="findPass2", method = RequestMethod.POST, produces = "text/plain; charset=UTF-8;")
 	@ResponseBody

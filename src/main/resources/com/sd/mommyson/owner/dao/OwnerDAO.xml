@@ -94,10 +94,9 @@
 		<result property="orderCode" column="ORDER_CODE"/>
 		<result property="orderType" column="ORDER_TYPE"/>
 		<result property="code" column="CODE"/>
-		<result property="requestTime" column="ORDER_RUQEUST_TIME" jdbcType="VARCHAR"/>
-		<result property="acceptTime" column="ORDER_ACCEPT_TIME" jdbcType="VARCHAR"/>
+		<result property="acceptTime" column="ORDER_ACCEPT_TIME" jdbcType="VARCHAR" />
 		<result property="completeTime" column="ORDER_COMPLETE_TIME" jdbcType="VARCHAR" />
-		<result property="takeTime" column="TAKE_TIME"/>
+		<result property="takeTime" column="TAKE_TIME" jdbcType="VARCHAR"/>
 		<association property="memberDTO" resultMap="memberResultMap"/>
 		<association property="orderInfoDTO" resultMap="InfoResultMap"/>
 		<association property="acceptDTO" resultMap="acceptResultMap"/>
@@ -112,7 +111,6 @@
 		<result property="orderType" column="ORDER_TYPE"/>
 		<result property="code" column="CODE"/>
 		<result property="acceptTime" column="ORDER_ACCEPT_TIME" jdbcType="VARCHAR" />
-		<result property="requestTime" column="ORDER_RUQEUST_TIME" jdbcType="VARCHAR"/>
 		<result property="completeTime" column="ORDER_COMPLETE_TIME" jdbcType="VARCHAR" />
 		<result property="phone" column="PHONE" jdbcType="VARCHAR" />
 		<result property="address" column="ADDRESS"/>
@@ -252,7 +250,6 @@
                   <where>
                         B.MEM_CODE = #{ searchCondition }
                   </where>
-                  ORDER BY A.START_DATE DESC
                     )D
                     <![CDATA[
              WHERE ROWNUM <= #{ endRow }
@@ -464,7 +461,7 @@
 	</update>
 	
 	<!-- 사업자 비밀번호 변경 쿼리문 -->
-	<update id="-">
+	<update id="modifyPwd">
 		UPDATE MEMBER_TBL
 		   SET MEM_PWD = #{ memPwd }
 		 WHERE MEM_CODE = #{ memCode }   
@@ -664,18 +661,6 @@
 		 </where>
 	</update>
 	
-	<!-- 반찬 삭제 시 할인율도 삭제하는 쿼리문 -->
-	<update id="removeProductCode">
-		UPDATE DC_PRODUCT
-		   SET DC_YN = 'N'
-		<where>
-		 	SD_CODE IN 
-			<foreach collection="list" item="list" separator="," open="(" close=")">
-				#{ list }
-			</foreach>
-		 </where>   
-	</update>
-	
 	<!-- 오늘의 할인의 토탈 수 구하는 쿼리문 -->
 	<select id="selectTotalDC" resultType="_int">
 		SELECT
@@ -798,15 +783,14 @@
 		  FROM ORDER_TBL A
 		 WHERE A.STORE_NAME = #{ storeName }
 		   AND A.CODE IN ( 1, 2 )
-		   AND A.ORDER_RUQEUST_TIME IS NOT NULL
-		   AND TO_CHAR(A.ORDER_RUQEUST_TIME,'YY/MM/DD') = TO_CHAR(SYSDATE,'YY/MM/DD')
+		   AND A.ORDER_ACCEPT_TIME IS NOT NULL
+		   AND TO_CHAR(A.ORDER_ACCEPT_TIME,'YY/MM/DD') = TO_CHAR(SYSDATE,'YY/MM/DD')
 	</select>
 	
 	<!-- 주문페이지 주문 접수  -->
 	<select id="selectOrderList" resultMap="orderResultMap">
 		 SELECT
 		         G.RNUM
-		       , G.ORDER_RUQEUST_TIME
 		       , G.ORDER_ACCEPT_TIME
                , G.ORDER_CODE
 		       , G.TOTAL_PRICE
@@ -819,7 +803,6 @@
                , G.TAKE_TIME
 	     FROM (SELECT
 		              ROWNUM RNUM
-		            , F.ORDER_RUQEUST_TIME
 		            , F.ORDER_ACCEPT_TIME
 	                , F.ORDER_CODE
 		            , F.TOTAL_PRICE
@@ -831,8 +814,7 @@
                     , F.AMONT
                     , F.TAKE_TIME
 	            FROM (SELECT
-						        A.ORDER_RUQEUST_TIME
-						      , A.ORDER_ACCEPT_TIME  
+						        A.ORDER_ACCEPT_TIME
 						      , A.ORDER_CODE
 						      , A.TOTAL_PRICE
 						      , A.CODE
@@ -841,7 +823,7 @@
 						      , D.ORDER_STATUS
 						      , E.SD_NAME 
 						      , B.AMONT
-						      , A.TAKE_TIME       
+						      , a.TAKE_TIME       
 						  FROM ORDER_TBL A
 						  LEFT JOIN MEMBER_TBL C ON (A.MEM_CODE = C.MEM_CODE)
 						  LEFT JOIN ACCEPT_TYPE_TBL D ON (A.CODE = D.CODE)
@@ -850,10 +832,10 @@
 	                    <where>
 		                    	A.STORE_NAME = #{ searchCondition }
 			 				AND A.CODE IN (1 , 2)
-			 				AND A.ORDER_RUQEUST_TIME IS NOT NULL
-			 				AND TO_CHAR(A.ORDER_RUQEUST_TIME,'YY/MM/DD') = TO_CHAR(SYSDATE,'YY/MM/DD')
+			 				AND A.ORDER_ACCEPT_TIME IS NOT NULL
+			 				AND TO_CHAR(A.ORDER_ACCEPT_TIME,'YY/MM/DD') = TO_CHAR(SYSDATE,'YY/MM/DD')
 			   	        </where>
-			   	        ORDER BY A.ORDER_RUQEUST_TIME DESC
+			   	        ORDER BY A.ORDER_ACCEPT_TIME DESC
 	                    )F
 	          <![CDATA[
 	          WHERE ROWNUM <= #{ endRow }
@@ -866,7 +848,6 @@
 	<select id="selectOrder" resultMap="orderResultMap2">
 		SELECT
 		        A.ORDER_ACCEPT_TIME
-		      , A.ORDER_RUQEUST_TIME  
 		      , A.ORDER_CODE
 		      , A.TOTAL_PRICE
 		      , C.NICKNAME
@@ -889,7 +870,7 @@
 	<!-- 주문 수락 -->
 	<update id="acceptModifyOrder">
 		UPDATE ORDER_TBL
-		   SET ORDER_ACCEPT_TIME = SYSDATE
+		   SET ORDER_RUQEUST_TIME = SYSDATE
 		     , CODE = #{ orderType }
 		 WHERE ORDER_CODE = #{ orderCode }
 	</update>
@@ -943,8 +924,7 @@
 		SELECT
 		         G.RNUM
 		       , G.ORDER_COMPLETE_TIME
-		       , G.ORDER_ACCEPT_TIME
-		       , G.ORDER_RUQEUST_TIME
+		       , G.ORDER_ACCEPT_TIME 
                , G.ORDER_CODE
 		       , G.TOTAL_PRICE
                , G.NICKNAME
@@ -957,8 +937,7 @@
 	     FROM (SELECT
 		              ROWNUM RNUM
 		            , F.ORDER_COMPLETE_TIME
-		            , F.ORDER_ACCEPT_TIME
-		            , F.ORDER_RUQEUST_TIME
+		            , F.ORDER_ACCEPT_TIME 
 	                , F.ORDER_CODE
 		            , F.TOTAL_PRICE
 	                , F.NICKNAME
@@ -970,8 +949,7 @@
                     , F.PHONE
 	            FROM (SELECT
 						        A.ORDER_COMPLETE_TIME
-						      , A.ORDER_RUQEUST_TIME
-						      , A.ORDER_ACCEPT_TIME
+						      , A.ORDER_ACCEPT_TIME  
 						      , A.ORDER_CODE
 						      , A.TOTAL_PRICE
 						      , C.NICKNAME
@@ -989,7 +967,7 @@
 	                    <where>
 		                    	    A.STORE_NAME = #{ storeName }
 			 				    AND A.CODE IN (3 , 4)
-			 				    AND A.ORDER_RUQEUST_TIME IS NOT NULL
+			 				    AND A.ORDER_ACCEPT_TIME IS NOT NULL
 			 			<if test="searchValue != null and searchValue != '' ">
 						  		AND E.SD_NAME LIKE '%' ||  #{ searchValue } || '%'
 						</if>
@@ -1003,7 +981,7 @@
 								AND A.ORDER_ACCEPT_TIME <![CDATA[ >= ]]> #{ mDate }
 						</if>
 						</where>
-	                    ORDER BY A.ORDER_RUQEUST_TIME DESC ) F 
+	                    ORDER BY A.ORDER_ACCEPT_TIME DESC ) F 
 						) G
 			WHERE G.RNUM BETWEEN #{ pagination.startRow } AND #{ pagination.endRow }
 	</select>
@@ -1145,7 +1123,6 @@
 		 , END_DATE
 		 , EXTEND_YN
 		 , PAY_DATE
-		 , MS_STORE_TBL
 		 )
 		 VALUES
 		 (
@@ -1155,7 +1132,6 @@
 		  , TO_DATE(#{ endDate },'YYYY-MM-DD')
 		  , 'N'
 		  , TO_DATE(SYSDATE,'YYYY-MM-DD HH24:mi:ss')
-		  , SEQ_MS_STORE
 		 )
 	</insert>
 	
@@ -1511,7 +1487,6 @@
 						 ORDER BY A.PAYDATE DESC) B 
 						 ) C
 			WHERE C.RNUM BETWEEN 1 AND 5
-			ORDER BY C.PAYDATE
 	</select>
 	
 	<!-- 회원탈퇴 비밀번호 셀렉트 -->

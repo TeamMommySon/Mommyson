@@ -580,6 +580,7 @@
          /* 이메일 인증번호 전송 & 비교 */
          $("#submit").click(function(){
      		var email = $("#email").val(); 
+        	alert("이메일에 인증번호를 발송하였습니다. 이메일을 확인해주세요.");
      		
      		$.ajax({
      			type:"POST",
@@ -663,7 +664,7 @@
    		$(function(){
    			$('#joinButton').click(function(){
    				if($('#locationCode').val() == 'N'){
-   					alert('지역코드를 클릭해주세요 ');
+   					alert('구 저장 버튼을 클릭해주세요 ');
    					return false;
    				}
    			});

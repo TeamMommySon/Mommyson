@@ -48,10 +48,10 @@
     margin-right: 10%;
 }
 
-#table2{
+/* #table2{
     margin-left:70%;
 
-}
+} */
 
 #totalAmountByStore{
     padding: 5px;
@@ -85,7 +85,7 @@
 }
 
 #package{
-    margin-left:63%;
+    margin-left:78%;
     width:100px;
     height:40px;
     border: 2px solid black; 
