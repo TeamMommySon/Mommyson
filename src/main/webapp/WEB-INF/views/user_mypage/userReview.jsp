@@ -97,7 +97,6 @@
 						}
 					}
 				}
-            	
 				if(document.getElementsByClassName("am")) {
 					const $button2 =$('.am');
 					console.log($button2);

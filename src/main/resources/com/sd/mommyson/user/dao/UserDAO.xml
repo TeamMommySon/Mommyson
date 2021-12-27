@@ -1049,6 +1049,7 @@
 		 , A.MEM_CODE
 		 , A.POST_CONTENT
 		 , A.POST_DATE
+		 , A.ANS_STATUS
 	    )
 	    VALUES
 	    (
@@ -1058,6 +1059,7 @@
 		 , #{ memCode }
 		 , #{ mtmContents }
 		 , SYSDATE
+		 , 'W'
 	    )
      </insert>
      

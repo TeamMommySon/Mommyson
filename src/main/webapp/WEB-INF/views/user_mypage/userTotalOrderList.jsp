@@ -59,7 +59,7 @@
              	     <input type="checkbox" name="choose" value="${ myOrder.orderCode }" style="width: 20px; height: 20px;">
            		    </c:if>
              	     <input type="hidden" name="orderCode" value="${ myOrder.orderCode }">
-             	     <c:out value="${ myOrder.orderCode }"/>
+             	     <%-- <c:out value="${ myOrder.orderCode }"/> --%>
                   </td>
                   <td>
                   <img class="storeimg" src="${ pageContext.servletContext.contextPath }/${ myOrder.storeInfo.storeImg }">
@@ -84,13 +84,9 @@
                   
                   <td style="padding-top: 40px;">
                   <c:out value="${ myOrder.completeTime }"/>
-                  <%-- <if test="${ myOrder.takeTime ne null}">
-                  <c:out value="${ myOrder.takeTime }"/>
-                  </if> --%>
                   </td>
                   <td style="padding-top: 40px;"><c:out value="${ myOrder.totalPrice }"/></td>
                   <td style="padding-top: 40px;">
-<!--                   <td rowspan="i" style="padding-top: 40px;"> -->
                   <c:if test="${ (myOrder.completeTime ne null || myOrder.takeTime ne null) && myOrder.acceptTime ne null }">
                   <button value="${ myOrder.orderCode }" onclick="postReview(this)" class="urBtn">리뷰쓰기</button>                             
                   </c:if>
@@ -125,16 +121,7 @@
               <button class="urBtn" style="margin-left: 970px;" onclick="getCheckboxValue()">주문취소</button>
             </div>
             <script>
-            	/* if(document.getElementsByTagName('td')) {
-            		let cancleBtn = $('#cancle');
-            		const query = 'input[name='choose']:checked';
-
-            		console.log(query);
-            		console.log(cancleBtn);
-            		
-            	} */
             	
-            	//작성중
             	function getCheckboxValue() {
             		const query = 'input[name="choose"]:checked';
             		  const selectedEls = 

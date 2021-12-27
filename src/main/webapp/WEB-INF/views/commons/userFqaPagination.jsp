@@ -55,7 +55,7 @@
 				link = "${ pageContext.servletContext.contextPath }/user/ucc/paycheckFqa";
 			}
 			
-			if(	no = fqaL[0].boardCode == '8') {
+			if(	fqaL[0].boardCode == '8') {
 				link = "${ pageContext.servletContext.contextPath }/user/ucc/reviewFqa";
 			}
 			

@@ -486,7 +486,7 @@
 	 WHERE A.RNUM >= #{ startRow }
 	 ]]>
 	</select>
-	 <!-- 리뷰관련 가게 제품정보 출력 (작업중)-->
+	 <!-- 리뷰관련 가게 제품정보 출력-->
  	<select id="selectMySdInfo" resultType="hashmap">
 	 SELECT
              A.ORDER_CODE
