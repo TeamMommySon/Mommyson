@@ -52,7 +52,7 @@
                 <th scope="col"><input type="checkbox"  id="allCheck"></th>
                 <th scope="col">발행일</th>
                 <th scope="col">쿠폰이름</th>
-                <th scope="col">할인율</th>
+                <th scope="col">할인금액</th>
                 <th scope="col">할인조건</th>
                 <th scope="col">유효기간</th>
               </tr>

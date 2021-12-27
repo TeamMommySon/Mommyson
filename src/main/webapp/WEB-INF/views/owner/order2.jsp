@@ -74,7 +74,7 @@
 						<c:forEach items="${ orderList2 }" var="ol">
 							<tr>
 								<th scope="row">${ ol.orderCode }</th>
-								<td>${ ol.acceptTime }</td>
+								<td>${ ol.completeTime }</td>
 								<td>${ ol.memberDTO.nickname }</td>
 								
 								<td  style="vertical-align: baseline ;">

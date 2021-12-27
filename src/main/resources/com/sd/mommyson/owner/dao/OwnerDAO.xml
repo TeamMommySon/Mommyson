@@ -94,7 +94,8 @@
 		<result property="orderCode" column="ORDER_CODE"/>
 		<result property="orderType" column="ORDER_TYPE"/>
 		<result property="code" column="CODE"/>
-		<result property="requestTime" column="ORDER_RUQEUST_TIME"/>
+		<result property="requestTime" column="ORDER_RUQEUST_TIME" jdbcType="VARCHAR"/>
+		<result property="acceptTime" column="ORDER_ACCEPT_TIME" jdbcType="VARCHAR"/>
 		<result property="completeTime" column="ORDER_COMPLETE_TIME" jdbcType="VARCHAR" />
 		<result property="takeTime" column="TAKE_TIME"/>
 		<association property="memberDTO" resultMap="memberResultMap"/>
@@ -111,6 +112,7 @@
 		<result property="orderType" column="ORDER_TYPE"/>
 		<result property="code" column="CODE"/>
 		<result property="acceptTime" column="ORDER_ACCEPT_TIME" jdbcType="VARCHAR" />
+		<result property="requestTime" column="ORDER_RUQEUST_TIME" jdbcType="VARCHAR"/>
 		<result property="completeTime" column="ORDER_COMPLETE_TIME" jdbcType="VARCHAR" />
 		<result property="phone" column="PHONE" jdbcType="VARCHAR" />
 		<result property="address" column="ADDRESS"/>
@@ -250,6 +252,7 @@
                   <where>
                         B.MEM_CODE = #{ searchCondition }
                   </where>
+                  ORDER BY A.START_DATE DESC
                     )D
                     <![CDATA[
              WHERE ROWNUM <= #{ endRow }
@@ -792,6 +795,7 @@
 		 SELECT
 		         G.RNUM
 		       , G.ORDER_RUQEUST_TIME
+		       , G.ORDER_ACCEPT_TIME
                , G.ORDER_CODE
 		       , G.TOTAL_PRICE
 		       , G.CODE
@@ -804,6 +808,7 @@
 	     FROM (SELECT
 		              ROWNUM RNUM
 		            , F.ORDER_RUQEUST_TIME
+		            , F.ORDER_ACCEPT_TIME
 	                , F.ORDER_CODE
 		            , F.TOTAL_PRICE
 		            , F.CODE
@@ -815,6 +820,7 @@
                     , F.TAKE_TIME
 	            FROM (SELECT
 						        A.ORDER_RUQEUST_TIME
+						      , A.ORDER_ACCEPT_TIME  
 						      , A.ORDER_CODE
 						      , A.TOTAL_PRICE
 						      , A.CODE
@@ -848,6 +854,7 @@
 	<select id="selectOrder" resultMap="orderResultMap2">
 		SELECT
 		        A.ORDER_ACCEPT_TIME
+		      , A.ORDER_RUQEUST_TIME  
 		      , A.ORDER_CODE
 		      , A.TOTAL_PRICE
 		      , C.NICKNAME
@@ -924,6 +931,7 @@
 		SELECT
 		         G.RNUM
 		       , G.ORDER_COMPLETE_TIME
+		       , G.ORDER_ACCEPT_TIME
 		       , G.ORDER_RUQEUST_TIME
                , G.ORDER_CODE
 		       , G.TOTAL_PRICE
@@ -937,6 +945,7 @@
 	     FROM (SELECT
 		              ROWNUM RNUM
 		            , F.ORDER_COMPLETE_TIME
+		            , F.ORDER_ACCEPT_TIME
 		            , F.ORDER_RUQEUST_TIME
 	                , F.ORDER_CODE
 		            , F.TOTAL_PRICE
@@ -950,6 +959,7 @@
 	            FROM (SELECT
 						        A.ORDER_COMPLETE_TIME
 						      , A.ORDER_RUQEUST_TIME
+						      , A.ORDER_ACCEPT_TIME
 						      , A.ORDER_CODE
 						      , A.TOTAL_PRICE
 						      , C.NICKNAME
