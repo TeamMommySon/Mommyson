@@ -1135,6 +1135,7 @@
 		 , END_DATE
 		 , EXTEND_YN
 		 , PAY_DATE
+		 , MS_STORE_TBL
 		 )
 		 VALUES
 		 (
@@ -1144,6 +1145,7 @@
 		  , TO_DATE(#{ endDate },'YYYY-MM-DD')
 		  , 'N'
 		  , TO_DATE(SYSDATE,'YYYY-MM-DD HH24:mi:ss')
+		  , SEQ_MS_STORE
 		 )
 	</insert>
 	
