@@ -21,7 +21,7 @@ public class OrderDTO {
 	private String acceptTime;
 	private Date cancleTime;
 	private String completeTime;
-	private Date requestTime;
+	private String requestTime;
 	private OrderInfoDTO orderInfoDTO;
 	private MemberDTO memberDTO;
 	private AcceptDTO acceptDTO;
@@ -41,9 +41,9 @@ public class OrderDTO {
 
 	public OrderDTO(int memCode, int totalPrice, int orderCode, String orderType, String takeTime, String address,
 			String phone, String storeName, int code, String acceptTime, Date cancleTime, String completeTime,
-			Date requestTime, OrderInfoDTO orderInfoDTO, MemberDTO memberDTO, AcceptDTO acceptDTO, List<String> product,
-			List<ProductDTO> productDTO, List<OrderInfoDTO> orderAmount, StoreDTO storeInfo, String postCode,
-			String dAddress) {
+			String requestTime, OrderInfoDTO orderInfoDTO, MemberDTO memberDTO, AcceptDTO acceptDTO,
+			List<String> product, List<ProductDTO> productDTO, List<OrderInfoDTO> orderAmount, StoreDTO storeInfo,
+			String postCode, String dAddress) {
 		super();
 		this.memCode = memCode;
 		this.totalPrice = totalPrice;
@@ -190,12 +190,12 @@ public class OrderDTO {
 	}
 
 
-	public Date getRequestTime() {
+	public String getRequestTime() {
 		return requestTime;
 	}
 
 
-	public void setRequestTime(Date requestTime) {
+	public void setRequestTime(String requestTime) {
 		this.requestTime = requestTime;
 	}
 
@@ -301,5 +301,4 @@ public class OrderDTO {
 				+ ", postCode=" + postCode + ", dAddress=" + dAddress + "]";
 	}
 
-	
 }

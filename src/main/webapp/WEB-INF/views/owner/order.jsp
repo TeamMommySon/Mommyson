@@ -74,17 +74,17 @@
 					<tbody>
 						<c:forEach items="${ orderList }" var="ol">
 						<tr>
-							<th scope="row">${ ol.acceptTime }</th>
+							<th scope="row">${ ol.requestTime }</th>
 							<td>${ ol.orderCode }</td>
 							<td>${ ol.memberDTO.nickname }</td>
 							<td>${ ol.orderType }</td>
 							<td>
-							<c:if test="${ ol.orderType eq '배달'}">
+							${ ol.takeTime }
+							<%-- <c:if test="${ ol.orderType eq '배'}">
 							X
 							</c:if>
 							<c:if test="${ ol.orderType eq '포장'}">
-							${ ol.takeTime }
-							</c:if>
+							</c:if> --%>
 							</td>
 							<td  style="vertical-align: baseline ;">
 							<button type="button" value="${ ol.orderCode }" class="detailOD" data-toggle="modal" data-target="#exampleModal" 
