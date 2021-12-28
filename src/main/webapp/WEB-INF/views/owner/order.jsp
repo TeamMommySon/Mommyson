@@ -230,7 +230,7 @@
 				
 				/* 변수 선언 부분 */
 					$tr = $("<tr>");
-					$orderTime = $("<td>").text(data.acceptTime);
+					$orderTime = $("<td>").text(data.requestTime);
 					$orderNum = $("<td>").text(data.orderInfoDTO.orderCode);
 					$customer = $("<td>").text(data.memberDTO.nickname);
 					$ordertype = $("<td>").text(data.orderType);
