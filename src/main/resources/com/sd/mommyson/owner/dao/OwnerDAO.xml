@@ -94,7 +94,7 @@
 		<result property="orderCode" column="ORDER_CODE"/>
 		<result property="orderType" column="ORDER_TYPE"/>
 		<result property="code" column="CODE"/>
-		<result property="acceptTime" column="ORDER_ACCEPT_TIME" jdbcType="VARCHAR" />
+		<result property="requestTime" column="ORDER_RUQEUST_TIME" jdbcType="VARCHAR" />
 		<result property="completeTime" column="ORDER_COMPLETE_TIME" jdbcType="VARCHAR" />
 		<result property="takeTime" column="TAKE_TIME" jdbcType="VARCHAR"/>
 		<association property="memberDTO" resultMap="memberResultMap"/>
@@ -110,7 +110,7 @@
 		<result property="orderCode" column="ORDER_CODE"/>
 		<result property="orderType" column="ORDER_TYPE"/>
 		<result property="code" column="CODE"/>
-		<result property="acceptTime" column="ORDER_ACCEPT_TIME" jdbcType="VARCHAR" />
+		<result property="requestTime" column="ORDER_RUQEUST_TIME" jdbcType="VARCHAR" />
 		<result property="completeTime" column="ORDER_COMPLETE_TIME" jdbcType="VARCHAR" />
 		<result property="phone" column="PHONE" jdbcType="VARCHAR" />
 		<result property="address" column="ADDRESS"/>
@@ -783,15 +783,15 @@
 		  FROM ORDER_TBL A
 		 WHERE A.STORE_NAME = #{ storeName }
 		   AND A.CODE IN ( 1, 2 )
-		   AND A.ORDER_ACCEPT_TIME IS NOT NULL
-		   AND TO_CHAR(A.ORDER_ACCEPT_TIME,'YY/MM/DD') = TO_CHAR(SYSDATE,'YY/MM/DD')
+		   AND A.ORDER_RUQEUST_TIME IS NOT NULL
+		   AND TO_CHAR(A.ORDER_RUQEUST_TIME,'YY/MM/DD') = TO_CHAR(SYSDATE,'YY/MM/DD')
 	</select>
 	
 	<!-- 주문페이지 주문 접수  -->
 	<select id="selectOrderList" resultMap="orderResultMap">
 		 SELECT
 		         G.RNUM
-		       , G.ORDER_ACCEPT_TIME
+		       , G.ORDER_RUQEUST_TIME
                , G.ORDER_CODE
 		       , G.TOTAL_PRICE
 		       , G.CODE
@@ -803,7 +803,7 @@
                , G.TAKE_TIME
 	     FROM (SELECT
 		              ROWNUM RNUM
-		            , F.ORDER_ACCEPT_TIME
+		            , F.ORDER_RUQEUST_TIME
 	                , F.ORDER_CODE
 		            , F.TOTAL_PRICE
 		            , F.CODE
@@ -814,7 +814,7 @@
                     , F.AMONT
                     , F.TAKE_TIME
 	            FROM (SELECT
-						        A.ORDER_ACCEPT_TIME
+						        A.ORDER_RUQEUST_TIME
 						      , A.ORDER_CODE
 						      , A.TOTAL_PRICE
 						      , A.CODE
@@ -832,8 +832,8 @@
 	                    <where>
 		                    	A.STORE_NAME = #{ searchCondition }
 			 				AND A.CODE IN (1 , 2)
-			 				AND A.ORDER_ACCEPT_TIME IS NOT NULL
-			 				AND TO_CHAR(A.ORDER_ACCEPT_TIME,'YY/MM/DD') = TO_CHAR(SYSDATE,'YY/MM/DD')
+			 				AND A.ORDER_RUQEUST_TIME IS NOT NULL
+			 				AND TO_CHAR(A.ORDER_RUQEUST_TIME,'YY/MM/DD') = TO_CHAR(SYSDATE,'YY/MM/DD')
 			   	        </where>
 			   	        ORDER BY A.ORDER_ACCEPT_TIME DESC
 	                    )F
@@ -847,7 +847,7 @@
 		
 	<select id="selectOrder" resultMap="orderResultMap2">
 		SELECT
-		        A.ORDER_ACCEPT_TIME
+		        A.ORDER_RUQEUST_TIME
 		      , A.ORDER_CODE
 		      , A.TOTAL_PRICE
 		      , C.NICKNAME
@@ -870,7 +870,7 @@
 	<!-- 주문 수락 -->
 	<update id="acceptModifyOrder">
 		UPDATE ORDER_TBL
-		   SET ORDER_RUQEUST_TIME = SYSDATE
+		   SET ORDER_ACCEPT_TIME = SYSDATE
 		     , CODE = #{ orderType }
 		 WHERE ORDER_CODE = #{ orderCode }
 	</update>
@@ -879,6 +879,7 @@
 	<update id="cancleModifyOrder">
 		UPDATE ORDER_TBL
 		   SET ORDER_CANCLE_TIME = SYSDATE
+		     ,  ORDER_COMPLETE_TIME = SYSDATE
 		     , CODE = #{ orderType }
 		 WHERE ORDER_CODE = #{ orderCode }
 	</update>
@@ -908,13 +909,13 @@
 	  		AND E.SD_NAME LIKE '%' ||  #{ searchValue } || '%'
 	</if>
 	 <if test="mDate != null and mDate != '' and mDate2 != null and mDate2 != ''">
-		  	AND A.ORDER_ACCEPT_TIME BETWEEN #{ mDate } AND #{ mDate2 }
+		  	AND A.ORDER_RUQEUST_TIME BETWEEN #{ mDate } AND #{ mDate2 }
 	</if>
 	<if test="mDate != null and mDate != '' and mDate2 == null and mDate2 == '' ">
-		  	AND A.ORDER_ACCEPT_TIME <![CDATA[ <= ]]> #{ mDate }
+		  	AND A.ORDER_RUQEUST_TIME <![CDATA[ <= ]]> #{ mDate }
 	</if>
 	<if test="mDate == null and mDate == '' and mDate2 != null and mDate2 != '' ">
-			AND A.ORDER_ACCEPT_TIME <![CDATA[ >= ]]> #{ mDate }
+			AND A.ORDER_RUQEUST_TIME <![CDATA[ >= ]]> #{ mDate }
 	</if>
 	 </where>
 	</select>
@@ -924,7 +925,7 @@
 		SELECT
 		         G.RNUM
 		       , G.ORDER_COMPLETE_TIME
-		       , G.ORDER_ACCEPT_TIME 
+		       , G.ORDER_RUQEUST_TIME 
                , G.ORDER_CODE
 		       , G.TOTAL_PRICE
                , G.NICKNAME
@@ -937,7 +938,7 @@
 	     FROM (SELECT
 		              ROWNUM RNUM
 		            , F.ORDER_COMPLETE_TIME
-		            , F.ORDER_ACCEPT_TIME 
+		            , F.ORDER_RUQEUST_TIME 
 	                , F.ORDER_CODE
 		            , F.TOTAL_PRICE
 	                , F.NICKNAME
@@ -949,7 +950,7 @@
                     , F.PHONE
 	            FROM (SELECT
 						        A.ORDER_COMPLETE_TIME
-						      , A.ORDER_ACCEPT_TIME  
+						      , A.ORDER_RUQEUST_TIME  
 						      , A.ORDER_CODE
 						      , A.TOTAL_PRICE
 						      , C.NICKNAME
@@ -967,21 +968,21 @@
 	                    <where>
 		                    	    A.STORE_NAME = #{ storeName }
 			 				    AND A.CODE IN (3 , 4)
-			 				    AND A.ORDER_ACCEPT_TIME IS NOT NULL
+			 				    AND A.ORDER_RUQEUST_TIME IS NOT NULL
 			 			<if test="searchValue != null and searchValue != '' ">
 						  		AND E.SD_NAME LIKE '%' ||  #{ searchValue } || '%'
 						</if>
 						 <if test="mDate != null and mDate != '' and mDate2 != null and mDate2 != ''">
-							  	AND A.ORDER_ACCEPT_TIME BETWEEN #{ mDate } AND #{ mDate2 }
+							  	AND A.ORDER_RUQEUST_TIME BETWEEN #{ mDate } AND #{ mDate2 }
 						</if>
 						<if test="mDate != null and mDate != '' and mDate2 == null and mDate2 == '' ">
-							  	AND A.ORDER_ACCEPT_TIME <![CDATA[ <= ]]> #{ mDate }
+							  	AND A.ORDER_RUQEUST_TIME <![CDATA[ <= ]]> #{ mDate }
 						</if>
 						<if test="mDate == null and mDate == '' and mDate2 != null and mDate2 != '' ">
-								AND A.ORDER_ACCEPT_TIME <![CDATA[ >= ]]> #{ mDate }
+								AND A.ORDER_RUQEUST_TIME <![CDATA[ >= ]]> #{ mDate }
 						</if>
 						</where>
-	                    ORDER BY A.ORDER_ACCEPT_TIME DESC ) F 
+	                    ORDER BY A.ORDER_RUQEUST_TIME DESC ) F 
 						) G
 			WHERE G.RNUM BETWEEN #{ pagination.startRow } AND #{ pagination.endRow }
 	</select>
