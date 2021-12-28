@@ -49,8 +49,8 @@
                         </tr>
                     </thead>
                 </table>
-                <div class="text_area">
-                    ${ selectNotice.postContent }
+               <div class="text_area">
+                  <textarea class="text_area" disabled>${ selectNotice.postContent }</textarea>
                 </div>
                 <input type="hidden" name="postNo" id="postNo" value="${ selectNotice.postNo }">
                 <div class="btn_box2">

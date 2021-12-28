@@ -87,18 +87,18 @@
                   </td>
                   <td style="padding-top: 40px;"><c:out value="${ myOrder.totalPrice }"/></td>
                   <td style="padding-top: 40px;">
-                  <c:if test="${ (myOrder.completeTime ne null || myOrder.takeTime ne null) && myOrder.acceptTime ne null }">
+                  <c:if test="${ myOrder.completeTime ne null && myOrder.acceptTime ne null }">
                   <button value="${ myOrder.orderCode }" onclick="postReview(this)" class="urBtn">리뷰쓰기</button>                             
                   </c:if>
                   <c:if test="${ (myOrder.acceptTime eq null) && (myOrder.cancleTime eq null) }">
                   <!-- 아직 접수 되지 않은 상태 -->             
                   <h6>주문접수 대기 중</h6>           
                   </c:if>
-                  <c:if test="${ (myOrder.completeTime eq null && myOrder.takeTime eq null) && myOrder.acceptTime ne null }">
+                  <c:if test="${ myOrder.completeTime eq null && myOrder.acceptTime ne null }">
                   <!-- 아직 소비자가 물건을 받지 못한 상태  -->
                   <h6>수령 대기중</h6>
                   </c:if>
-                  <c:if test="${ (myOrder.completeTime eq null || myOrder.takeTime eq null) && myOrder.cancleTime ne null }">
+                  <c:if test="${ myOrder.cancleTime ne null }">
                   <!-- 아직 소비자가 물건을 받지 못한 상태  -->
                   <h6>주문취소</h6>
                   </c:if>

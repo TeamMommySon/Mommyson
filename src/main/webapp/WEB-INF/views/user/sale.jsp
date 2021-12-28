@@ -25,7 +25,7 @@
             <div class="row" style="margin-bottom: 100px;">
                 <c:forEach items="${ requestScope.productList }" var="product">
 	                <div class="col-3">
-	                    <img style="width: 160px; height: 160px; border-radius: 10px; border: 1px solid black;" src="${ pageContext.servletContext.contextPath }/${ product.sdImg }">
+	                    <img style="width: 160px; height: 160px; border-radius: 10px; border: 1px solid gray;" src="${ pageContext.servletContext.contextPath }/${ product.sdImg }">
 	                    <div class="menu_div"> 
 	                        <a href="${ pageContext.servletContext.contextPath }/user/sidedish_detail?sdCode=${ product.sdCode }&memCode=${ product.memCode }" class="menu_name">${ product.sdName }(${ product.volume }g)</a>
 	                        <pre><strong><fmt:formatNumber value="${ product.price - (product.price * product.discountRate / 100) }" />원</strong>  <label style="text-decoration: line-through; color: lightgray;"><fmt:formatNumber value="${ product.price }" />원</label></pre>

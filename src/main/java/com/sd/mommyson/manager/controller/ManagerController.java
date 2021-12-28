@@ -1124,62 +1124,60 @@ public class ManagerController {
 				Map<String, Object> updateFile = new HashMap<>();
 				updateFile.put("postNo",postNo);
 
-
+				/* 파일코드값과 경로값 주기 */
 				if(i == 0 && fileCode1 > 0) {
 					System.out.println("첫번째 코드");
 					updateFile.put("fileCode", fileCode1);
+					updateFile.put("filePath", filePath1);
 				}else if(i == 1  && fileCode2 > 0) {
 					System.out.println("두번째 코드");
 					updateFile.put("fileCode", fileCode2);
+					updateFile.put("filePath", filePath2);
 				}else if(i == 2  && fileCode3 > 0) {
 					System.out.println("세번째 코드");
 					updateFile.put("fileCode", fileCode3);
-				} else {
+					updateFile.put("filePath", filePath3);
+				} else { // 나중에 없애야함
 					updateFile.putIfAbsent("fileCode", 0);
+					if(i == 0) {
+						updateFile.put("filePath", filePath1);
+					} else if(i == 1){
+						updateFile.put("filePath", filePath2);
+					} else if(i == 2){
+						updateFile.put("filePath", filePath3);
+					}
 				}
 
 				System.out.println("중간 코드 점검 : " + updateFile.get("fileCode"));
 
 				System.out.println("문제의 원인 : " + imgFiles.get(i));
 				System.out.println("문제의 원인 : " + imgFiles.get(i).getOriginalFilename()); //원래 파일이 있던 경우는 null임
-				System.out.println(!filePath1.isEmpty() || !filePath2.isEmpty() || !filePath3.isEmpty());
-				if((!filePath1.isEmpty() || !filePath2.isEmpty() || !filePath3.isEmpty()) && imgFiles.get(i).getOriginalFilename() == "") {
+				System.out.println(!filePath1.isEmpty());//false
+				System.out.println(!filePath2.isEmpty());
+				System.out.println(!filePath3.isEmpty());
+				System.out.println(imgFiles.get(0).getOriginalFilename());
+				System.out.println(imgFiles.get(1).getOriginalFilename());
+				System.out.println(imgFiles.get(2).getOriginalFilename());
+
+				/* 저장된 파일이 있었지만 없는경우 : 경로가 ""이 아니고, 등록된파일은 없음 -> 둘 다 filePath넣어주기 */
+				if(!updateFile.get("filePath").equals("") && imgFiles.get(i).getOriginalFilename() == "") {
 
 					System.out.println("if문 1 들어옴");
-					String fileName = "";
-					if(i == 0) {
-						fileName = filePath1;
-					} else if(i == 1) {
-						fileName = filePath2;
-					} else if(i == 2) {
-						fileName = filePath3;
-					}
 					
-					updateFile.put("fileName", fileName);
-					
-					System.out.println("문제 내용 : " + updateFile);
-					
+					updateFile.put("fileName", updateFile.get("filePath"));
+
 					if(updateFile.get("fileCode").equals(0)) {
 						result = managerService.registBusinessFile(updateFile);
 					} else {
 						result = managerService.updateBusinessFile(updateFile);
 					}
 
-				} else if( imgFiles.get(i) == null ){	
+				} else if(updateFile.get("filePath").equals("") && imgFiles.get(i).getOriginalFilename() == ""){	/* 저장된 파일이 없었고 없는경우 */
 					
-					System.out.println("if문 들어옴");
-					String fileName = "";
-					updateFile.put("fileName", fileName);
-					
-					System.out.println("문제 내용 : " + updateFile);
-					
-					if(updateFile.get("fileCode").equals(0)) {
-						result = managerService.registBusinessFile(updateFile);
-					} else {
-						result = managerService.updateBusinessFile(updateFile);
-					}
+					/* 있었는데 변경할 경우 */
 				} else {
 					System.out.println("else문 들어옴");
+					
 					String originFileName = imgFiles.get(i).getOriginalFilename();
 					String ext = originFileName.substring(originFileName.indexOf("."));
 					String savedName = UUID.randomUUID().toString().replace("-", "") + ext;
@@ -1203,10 +1201,6 @@ public class ManagerController {
 						e.printStackTrace();
 					}
 				}
-
-
-
-
 			} 
 		} else if(imgFiles.isEmpty()) {
 
