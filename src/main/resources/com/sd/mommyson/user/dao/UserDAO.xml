@@ -529,7 +529,7 @@
     </select>
     
     <select id="selectProductTotalCount" parameterType="hashmap" resultType="_int">
-    	SELECT
+    	SELECT 
 			   COUNT(*)
 		  FROM PRODUCT_TBL A
 		 WHERE A.IS_DELETED = 'N'
@@ -549,7 +549,7 @@
     </select>
     
     <select id="selectProductList" resultMap="productResultMap">
-    	SELECT
+    	SELECT 
 		       C.RNUM
 		     , C.SD_CODE
              , C.SD_NAME
@@ -571,7 +571,7 @@
                     , B.DISCOUNT_RATE 
                     , B.MEM_CODE 
                     , B.STORE_NAME 
-	            FROM (SELECT
+	            FROM (SELECT 
 	                         A.SD_CODE
 	                       , A.SD_NAME
 	                       , A.PRICE 
@@ -681,7 +681,7 @@
     </select>
     
     <select id="selectProducts" resultMap="productResultMap">
-    	SELECT
+    	SELECT 
     		   A.SD_CODE
     		 , A.SD_IMG
     		 , A.SD_NAME
@@ -697,7 +697,7 @@
     </select>
     
     <select id="selectProductBySdCode" resultMap="productTagResultMap">
-    	SELECT
+    	SELECT 
     		   A.SD_CODE
     		 , A.SD_IMG
     		 , A.M_DATE
@@ -826,7 +826,7 @@
             #{ memCode }
           , #{ price }
           , SEQ_ORDER_CODE.NEXTVAL
-          , '배'
+          , '배달'
           , null
           , null
           , null
@@ -1029,7 +1029,7 @@
     </select>
     
     <select id="selectSearchList" resultMap="productResultMap">
-    	SELECT
+    	SELECT DISTINCT
                A.SD_CODE
              , A.SD_NAME
              , A.PRICE 

@@ -28,7 +28,7 @@
     <div id="div">
       <p id="p">주문이 성공적으로 완료되었습니다.</p>
       <br>
-      <button type="submit" id="myOrderList" style="margin-left: 39%; width:100px; height:40px; border-radius: 9px; color:rgb(247, 170, 145);
+      <button type="submit" id="myOrderList" style="margin : 0 auto; width:100px; height:40px; border-radius: 9px; color:rgb(247, 170, 145);
               font-size: 20px; border:2px solid rgb(247, 170, 145); background-color:rgb(255, 255, 255); margin-left: 43%;">주문내역</button>
     </div>
     <br><br>
@@ -37,7 +37,7 @@
     
     <p id="information">주문자 정보</p>
     <br>
-     <table id="table1">  
+     <table id="table1" style="margin : 0 auto;">  
 
         <tr>    
             <th name="phone">연락처</td>
@@ -50,7 +50,7 @@
     <p id="orderProduct">주문 내역</p> 
 	 	<input type="hidden" id="orderCode" name="code" value="${ requestScope.orderList[0].ORDER_CODE }"/>
 	    <br>    
-	    <table id="table2" style="margin-left : 23%;">  
+	    <table id="table2" style="margin : 0 auto;">  
 		        <tr>
 		            <th id="restaurantInformation" 	name="storeName">가게상호 </th>
 		            <th id="productInformation" 	name="sdCode">반찬명</th>

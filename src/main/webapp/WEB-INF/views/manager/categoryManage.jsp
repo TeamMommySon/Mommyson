@@ -95,7 +95,7 @@
          /* 카테고리 삭제 (미사용)*/
          function categoryDelete(e){
         	 
-        	 const categoryCode = e.previousElementSibling.value;
+        	 const categoryCode = e.previousElementSibling.previousElementSibling.previousElementSibling.value;
         	 
         	 $.ajax({
         		url : '${ pageContext.servletContext.contextPath }/manager/categoryDelete',

@@ -31,7 +31,7 @@
         <button type="submit" class="login" onclick="validate();">로그인</button>
         &nbsp; &nbsp; &nbsp; 
         <button type="button" class="reset" id="goMain">취소</button>
-        <br>
+        <br> <br> 
         <a href="${ pageContext.servletContext.contextPath }/member/findId">아이디 찾기</a> &nbsp; 
         <a href="${ pageContext.servletContext.contextPath }/member/findPwd">비밀번호 찾기</a> &nbsp; 
         <a href="${ pageContext.servletContext.contextPath }/member/join">회원가입</a> 

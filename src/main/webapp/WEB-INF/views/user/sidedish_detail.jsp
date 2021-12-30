@@ -116,6 +116,8 @@
 	                            		return false;
 	                            	}
 	                            	
+	                            	$('input:hidden[name=price]').val(parseInt($('input:hidden[name=price]').val().replace(',','')));
+	                            	
 	                            	return true;
 	                            }
 	                        </script>
