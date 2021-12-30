@@ -41,7 +41,7 @@
                     </div>
                     <script>
                     	function jjim_plus(str) {
-                    		if(${ sessionScope.loginMember != null}) {
+                    		if(${ sessionScope.loginMember != null }) {
                     			let storeCode = '${ requestScope.store.MEM_CODE }';
                         		let memCode = '${ sessionScope.loginMember.memCode }';
                         		$.ajax({
@@ -246,6 +246,30 @@
 	                    </c:if>
                     </c:forEach>
 
+				    <script>
+						 // 신고버튼 스크립트
+				      	$('#reportBtn').on('click',function(e) {
+				      		let rvCode = this.value;
+				      		$('#rvCode').val(rvCode);	
+				      	});
+						 
+						 function insertReport(e) {
+							 let rvCode = e.value;
+				      		$('#rvCode').val(rvCode);
+						 }
+				    
+				      	// 장바구니 담는 페이지로 이동
+				      	$('.pink_btn').on('click', function(e) {
+				      		if(${ sessionScope.loginMember != null }) {
+				      			let sdCode = e.target.value;
+				          		location.href = '${ pageContext.servletContext.contextPath }/user/sidedish_detail?sdCode=' + sdCode + '&memCode=${ requestScope.store.MEM_CODE }';
+				      		} else {
+				      			alert('로그인이 필요한 서비스입니다.');
+				      			location.href = '${ pageContext.servletContext.contextPath }/member/login';
+				      		}
+				      	});
+				      	
+				    </script>
                     <!-- 리뷰 -->
                     <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; padding: 0px 40px 0px 40px;">
                         <h1 style="margin-bottom: 70px; margin-top: 100px; border-bottom: 1px solid black;">리뷰</h1>
@@ -267,7 +291,7 @@
 			                                </svg>
 		                                </c:forEach>
 	                                </div>
-	                                <div class="df-ac">&nbsp;<button id="reportBtn" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo" style="background-color: white; border: none;" value="${ rv.rvCode }"><img src="${ pageContext.servletContext.contextPath }/resources/images/reportbtn.png" style="width: 40px; height: 40px;"></button></div>
+	                                <div class="df-ac">&nbsp;<button id="reportBtn" onclick="insertReport(this)" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo" style="background-color: white; border: none;" value="${ rv.rvCode }"><img src="${ pageContext.servletContext.contextPath }/resources/images/reportbtn.png" style="width: 40px; height: 40px;"></button></div>
 	                            </div>
 	                            <div class="review_text">
 	                                <p>
@@ -286,7 +310,7 @@
                 </div>
             </div>
         </div>
-        <c:if test="${ sessionScope.loginMember != null }">
+        <c:if test="${ sessionScope.loginMember != null && sessionScope.loginMember.memType == 'user' }">
         	<div id="cart_logo">
         		<c:if test="${ sessionScope.cartCount != 0 }">
         			<div style="background: #FFF9C2; width: 23px; height: 23px; border-radius: 50%; position: relative; top: 26px; color: black; display: flex; align-items: center; justify-content: center;">
@@ -297,24 +321,6 @@
         	</div>
         </c:if>
     </section>
-    <script>
-      	// 장바구니 담는 페이지로 이동
-      	$('.pink_btn').on('click', function(e) {
-      		if(${ sessionScope.loginMember != null}) {
-      			let sdCode = e.target.value;
-          		location.href = '${ pageContext.servletContext.contextPath }/user/sidedish_detail?sdCode=' + sdCode + '&memCode=${ requestScope.store.MEM_CODE }';
-      		} else {
-      			alert('로그인이 필요한 서비스입니다.');
-      			location.href = '${ pageContext.servletContext.contextPath }/member/login';
-      		}
-      	})
-      	
-      	// 신고버튼 스크립트
-      	$('#reportBtn').on('click',function(e) {
-      		let rvCode = this.value;
-      		$('#rvCode').val(rvCode);	
-      	})
-    </script>
 
     <jsp:include page="../commons/footer.jsp"/>
 </body>

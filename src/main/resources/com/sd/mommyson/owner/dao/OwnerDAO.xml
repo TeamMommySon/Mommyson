@@ -1124,6 +1124,7 @@
 		 , END_DATE
 		 , EXTEND_YN
 		 , PAY_DATE
+		 , MS_STORE_CODE
 		 )
 		 VALUES
 		 (
@@ -1133,6 +1134,7 @@
 		  , TO_DATE(#{ endDate },'YYYY-MM-DD')
 		  , 'N'
 		  , TO_DATE(SYSDATE,'YYYY-MM-DD HH24:mi:ss')
+		  , SEQ_MS_STORE.NEXTVAL
 		 )
 	</insert>
 	
@@ -1205,13 +1207,15 @@
 		     , C.PHONE
 		     , D.PAY_DATE
 		     , E.MS_PRICE
+		     , D.START_DATE AS startDate
+		     , D.END_DATE AS endDate
 		  FROM STORE_TBL A 
 		  JOIN CEO_TBL B ON (A.MEM_CODE = B.MEM_CODE)
 		  JOIN MEMBER_TBL C ON (B.MEM_CODE = C.MEM_CODE)
 		  JOIN MS_STORE_TBL D ON (A.MEM_CODE = D.MEM_CODE)
 		  JOIN MEMBERSHIP_TBL E ON (D.MS_CODE = E.MS_CODE)
 		 WHERE A.MEM_CODE = #{ memCode }
-		   AND TO_DATE(D.PAY_DATE,'yy-mm-dd') = #{ payDate } 
+		   AND TO_DATE(D.PAY_DATE,'YY-MM-DD') = #{ payDate } 
 	</select>	
 	
 	<!-- 유통기한 지난 상품 판매여부 변경 쿼리문 -->

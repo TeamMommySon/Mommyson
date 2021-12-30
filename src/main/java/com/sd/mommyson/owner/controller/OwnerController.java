@@ -2,6 +2,7 @@ package com.sd.mommyson.owner.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -1221,23 +1222,30 @@ public class OwnerController {
 	
 	/* 영수증 출력 */
 	@GetMapping("receipt")
-	public void receipt(Model model, @RequestParam String payDate) {
+	public void receipt(Model model, @RequestParam String payDate) throws ParseException {
 		
 		MemberDTO member = (MemberDTO)model.getAttribute("loginMember");
 		int memCode = member.getMemCode();
 		
 		System.out.println("payDate : " + payDate);
 		
+		SimpleDateFormat sdf = new SimpleDateFormat("yy-MM-dd"); 
+
+		java.util.Date da = sdf.parse(payDate);
+		
+		String date = sdf.format(da);
+		
+		System.out.println("date : " + date);
 		
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("memCode",memCode);
-		map.put("payDate",payDate);
+		map.put("payDate",date);
 		
 		Map<String, Object> payInfo = ownerService.selectPayInfo(map);
 		
 		if(payInfo != null && !payInfo.isEmpty()) {
 			
-			model.addAttribute("payInfo",payInfo);
+			model.addAttribute("membership",payInfo);
 		} 
 	}
 	
@@ -1549,3 +1557,4 @@ public class OwnerController {
 	}
 	
 }
+

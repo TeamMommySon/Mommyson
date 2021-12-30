@@ -38,10 +38,10 @@
               <table>
                 <tbody class="qnaList">
                   <tr>
-                    <td style="border-right: solid gainsboro;"><a href="${ pageContext.servletContext.contextPath }/user/ucc/usingFqa?currentPage=1&searchValue=찾기"><img class="imgFAQ" src="${ pageContext.servletContext.contextPath }/resources/images/FAQICONIdPasswordFind.png"></a></td>
+                    <td style="border-right: solid gainsboro;"><a href="${ pageContext.servletContext.contextPath }/user/ucc/memberJoinFqa?currentPage=1&searchValue=찾기"><img class="imgFAQ" src="${ pageContext.servletContext.contextPath }/resources/images/FAQICONIdPasswordFind.png"></a></td>
                     <td style="border-right: solid gainsboro;"><a href="${ pageContext.servletContext.contextPath }/user/ucc/paycheckFqa?currentPage=1&searchValue=주문내역+조회"><img class="imgFAQ" src="${ pageContext.servletContext.contextPath }/resources/images/FAQICONOrderList.png"></a></td>
                     <td style="border-right: solid gainsboro;"><a href="${ pageContext.servletContext.contextPath }/user/ucc/reviewFqa?currentPage=1&searchValue=조회"><img class="imgFAQ" src="${ pageContext.servletContext.contextPath }/resources/images/FAQICONWriteReview.png"></a></td>
-                    <td><a href="${ pageContext.servletContext.contextPath }/user/ucc/usingFqa?currentPage=1&searchValue=쿠폰"><img class="imgFAQ" src="${ pageContext.servletContext.contextPath }/resources/images/FAQICONCoupon.png"></a></td>                  
+                    <td><a href="${ pageContext.servletContext.contextPath }/user/ucc/paycheckFqa?currentPage=1&searchValue=쿠폰"><img class="imgFAQ" src="${ pageContext.servletContext.contextPath }/resources/images/FAQICONCoupon.png"></a></td>                  
                   </tr>
                 </tbody>
               </table>

@@ -24,9 +24,7 @@
 
 		<div class="board_container">
 			<h2>공지사항</h2>
-			<form
-				action="${ pageContext.servletContext.contextPath }/manager/noticeSelect"
-				method="GET">
+			<form action="${ pageContext.servletContext.contextPath }/manager/noticeSelect" method="GET">
 				<select class="sel_notice" name="searchCondition"
 					id="searchCondition">
 					<option value="all"
@@ -78,9 +76,21 @@
 								<th scope="row"><input type="checkbox" name="chkNotice"
 									value="${ nl.postNo }"></th>
 								<td>${ num }</td>
-								<td class="tal"><a
-									href="${ pageContext.servletContext.contextPath }/manager/noticeDetailView?postNo=${ nl.postNo }">${ nl.postTitle }</a>
-								</td>
+								<c:if test='${ nl.boardCode eq "1" }'>
+								<td class="tal"><a href="${ pageContext.servletContext.contextPath }/manager/noticeDetailView?postNo=${ nl.postNo }">[공지] ${ nl.postTitle }</a></td>
+								</c:if>
+								<c:if test='${ nl.boardCode eq "2" }'>
+								<td class="tal"><a href="${ pageContext.servletContext.contextPath }/manager/noticeDetailView?postNo=${ nl.postNo }">[안내] ${ nl.postTitle }</a></td>
+								</c:if>
+								<c:if test='${ nl.boardCode eq "3" }'>
+								<td class="tal"><a href="${ pageContext.servletContext.contextPath }/manager/noticeDetailView?postNo=${ nl.postNo }">[점검] ${ nl.postTitle }</a></td>
+								</c:if>
+								<c:if test='${ nl.boardCode eq "4" }'>
+								<td class="tal"><a href="${ pageContext.servletContext.contextPath }/manager/noticeDetailView?postNo=${ nl.postNo }">[이벤트] ${ nl.postTitle }</a></td>
+								</c:if>
+								<c:if test='${ nl.boardCode eq "5" }'>
+								<td class="tal"><a href="${ pageContext.servletContext.contextPath }/manager/noticeDetailView?postNo=${ nl.postNo }">[사업자] ${ nl.postTitle }</a></td>
+								</c:if>
 								<td>${ nl.postDate }</td>
 								<td>${ nl.viewCnt }</td>
 							</tr>

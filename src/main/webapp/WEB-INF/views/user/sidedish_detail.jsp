@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -71,8 +72,8 @@
 	                    </div>
 	                    <div class="side_info">
 	                        <p>가격</p>
-	                        <p>${ requestScope.product.price } 원</p>
-	                        <input type="hidden" value="${ requestScope.product.price }" name="price">
+	                        <p><fmt:formatNumber value="${ requestScope.product.price - (requestScope.product.price * requestScope.product.discountRate / 100)  }"/> 원</p>
+	                        <input type="hidden" value="${ requestScope.product.price - (requestScope.product.price * requestScope.product.discountRate / 100) }" name="price">
 	                    </div>
 	                    <div class="side_info">
 	                        <p>할인</p>
@@ -80,7 +81,7 @@
 	                        	<p>(-)</p>
 	                        </c:if>
 	                        <c:if test="${ requestScope.product.discountRate > 0 }">
-	                        	<p>${ requestScope.product.discountRate }</p>
+	                        	<p><fmt:formatNumber value="${ requestScope.product.discountRate }"/>%</p>
 	                        </c:if>
 	                    </div>
 	                    <div class="side_info">
@@ -128,7 +129,7 @@
             </div>
         </div>
         
-        <c:if test="${ sessionScope.loginMember != null }">
+        <c:if test="${ sessionScope.loginMember != null && sessionScope.loginMember.memType == 'user' }">
         	<div id="cart_logo">
         		<c:if test="${ sessionScope.cartCount != 0 }">
         			<div style="background: #FFF9C2; width: 23px; height: 23px; border-radius: 50%; position: relative; top: 26px; color: black; display: flex; align-items: center; justify-content: center;">

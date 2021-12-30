@@ -57,13 +57,13 @@
 							<div style="width: 80%; margin: 0 auto;">
 							<br>
 							<h4 style="text-align: left;"><strong>마미손</strong></h4>
-							<h1 style="text-align: left;">${ payInfo.MS_PRICE }원</h1>
+							<h1 style="text-align: left;">${ membership.MS_PRICE }원</h1>
 							<br>
 							<h5 style="text-align: right;"><img src="../resources/images/pay.png" width="70px" height="29px" style="position: relative; bottom: 2px;" > 카카오페이</h5>
 							<hr style="border-top: 2px solid #000000">
 							<table style="width: 80%; margin: 0 auto;">
 							
-							<c:if test="${ payInfo.MS_PRICE eq '199,000'}">
+							<c:if test="${ membership.MS_PRICE eq '199,000'}">
 								<tr>
 									<th>공급가액</th>
 									<td>180,909원</td>
@@ -74,7 +74,7 @@
 								</tr>
 							</c:if>	
 							
-							<c:if test="${ payInfo.MS_PRICE eq '699,000'}">
+							<c:if test="${ membership.MS_PRICE eq '699,000'}">
 								<tr>
 									<th>공급가액</th>
 									<td>635,455원</td>
@@ -90,7 +90,7 @@
 							<table style="width: 80%; margin: 0 auto; ">
 								<tr>
 									<th>총 결제 금액</th>
-									<td>${ payInfo.MS_PRICE }</td>
+									<td>${ membership.MS_PRICE }</td>
 								</tr>
 							</table>
 						</div>
@@ -109,7 +109,7 @@
 								</tr>
 								<tr>
 									<th>거래 일시</th>
-									<td>${ payInfo.PAY_DATE }</td>
+									<td>${ membership.PAY_DATE }</td>
 								</tr>
 								
 							</table>
@@ -118,19 +118,19 @@
 							<table style="width: 80%;  margin: 0 auto;">
 								<tr>
 									<th>상호명</th>
-									<td>${ payInfo.STORE_NAME }</td>
+									<td>${ membership.STORE_NAME }</td>
 								</tr>
 								<tr>
 									<th>사업자 번호</th>
-									<td>${ payInfo.STORE_NO }</td>
+									<td>${ membership.STORE_NO }</td>
 								</tr>
 								<tr>
 									<th>사업자 주소</th>
-									<td>${ payInfo.ADDRESS }${ payInfo.D_ADDRESS }</td>
+									<td>${ membership.ADDRESS }${ membership.D_ADDRESS }</td>
 								</tr>
 								<tr>
 									<th style="width: 120px;">사업자 전화번호</th>
-									<td>${ payInfo.PHONE }</td>
+									<td>${ membership.PHONE }</td>
 								</tr>
 							</table>
 						</div>

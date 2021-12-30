@@ -57,8 +57,6 @@
                 <label for="myaddress"></label>
                 <span>내 주소로 배달</span>
              </div>
-            &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-            &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
              <span id="address2CheckResult"></span>
           </div>
           
@@ -92,7 +90,7 @@
                              <p>${ order.STORE_NAME }</p>
                           </td>
                           <td>
-                             <p id="price" style="display: inline;"><fmt:formatNumber value="${ order.TOTAL_PRICE }"/></p><span>원</span>
+                             <p class="priceC" id="price" style="display: inline;"><fmt:formatNumber value="${ order.TOTAL_PRICE }"/></p><span>원</span>
                           </td>
                           <td class="delCostWon">
                              <c:if test="${ order.DEL_COST != null }">
@@ -104,7 +102,7 @@
                           </td>
                           <td>
                              <select id="coupons">
-                                <option value="0">쿠폰을선택하세요</option>
+                                <option id="" value="0">쿠폰을선택하세요</option>
                                 <c:forEach items="${ requestScope.couponList }" var="c">
                                      <c:if test="${ order.STORE_CODE == c.storeCode }">
                                         <option id="${ c.cpNum }" value="${ c.disWon }"><c:out value="${ c.cpName }"/></option>
@@ -137,7 +135,7 @@
                 </li>
                 <li>
                    <p>총 배송비</p>
-                   <strong id="delCost">0</strong><span class="won">원</span>
+                   <strong class="delCost">0</strong><span class="won">원</span>
                 </li>
                 <li>
                    <img src="${ pageContext.servletContext.contextPath }/resources/images/pay_result.png" alt="=">
@@ -324,17 +322,36 @@
       
       
         // 금액 뿌려주기
-        $(function() {
+        /* $(function() {
            let prices = 0;
-           $('#price').each(function(index,val) {
-              prices += parseInt($('#price').text().replace(',',''));
+           $('.priceC').each(function(index,val) {
+              prices += parseInt($('.priceC').text().replace(',',''));
            })
            
            $('#productPrice').text(prices);
            
            $('#totalPrice').val(prices);
-        })
+        }) */
         
+        $(function() {
+	   		let prices = 0;
+	   		
+	   		$('.priceC').each(function(index,val) {
+	   			prices += parseInt($(this).text().replace(',',''));
+	   		})
+	   		
+	   		$('#productPrice').text(prices);
+	   		$('#totalPrice').val(prices);
+	   		
+	   		let delCostWon = 0;
+	   		for(let i = 0; i < $('.delCostWon > p').length; i++){
+	   			delCostWon += parseInt($('.delCostWon > p')[i].textContent);
+	   		}
+	   		$('.delCost').text(delCostWon);
+	   		let total = parseInt($('#productPrice').text()) + parseInt($('.delCost').text());
+	   		$('#totalPrice').val(total);
+	   		
+	   	});
         
        // 취소 시 order_tbl 데이터 삭제
          $('#goShoppingBasket').on('click',function() {
@@ -357,7 +374,7 @@
                    discountWon += parseInt($(this).val());
                 })
                 $('#discountWon').text(discountWon);
-                let total = parseInt($('#productPrice').text()) - discountWon + parseInt($('#delCost').text());
+                let total = parseInt($('#productPrice').text()) - discountWon + parseInt($('.delCost').text());
                 $('#totalPrice').val(total);
             }
          });
@@ -373,8 +390,8 @@
                 let address = $('#address1').val();
                 let detailAddress = $('#address2').val();
                 let totalPrice = [];
-                $('#price').each(function(index,val) {
-                   totalPrice.push($('#price').text().replace(',',''));
+                $('.priceC').each(function(index,val) {
+                   totalPrice.push(parseInt($(this).text().replace(',','')));
                 });
                 let payPrice = $('#totalPrice').val();
                 let takeTime = $('#time').val();
@@ -384,7 +401,10 @@
                 });
                 let couponCodes = [];
                 $('select option:selected').each(function(index) {
-                   couponCodes.push($(this).attr('id'));
+                    if($(this).attr('id') != "" && $(this).attr('id') != null){
+                    	couponCodes.push($(this).attr('id'));	
+                	}
+                   
                 });
                 var IMP = window.IMP; 
                  IMP.init('imp43692691'); 

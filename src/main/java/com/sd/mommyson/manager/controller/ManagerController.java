@@ -7,7 +7,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -15,18 +14,12 @@ import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.apache.poi.hssf.usermodel.HSSFFont;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.BorderStyle;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFCell;
-import org.apache.poi.xssf.usermodel.XSSFFont;
+import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -43,6 +36,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.sd.mommyson.manager.common.Pagination;
 import com.sd.mommyson.manager.dto.BannerDTO;
@@ -57,8 +51,6 @@ import com.sd.mommyson.member.dto.ManagerDTO;
 import com.sd.mommyson.member.dto.MemberDTO;
 import com.sd.mommyson.owner.dto.TagDTO;
 import com.sd.mommyson.user.dto.OrderDTO;
-import com.sd.mommyson.user.dto.ReportDTO;
-import com.sd.mommyson.user.dto.ReviewDTO;
 
 @Controller
 @RequestMapping("/manager/*")
@@ -74,135 +66,141 @@ public class ManagerController {
 	}
 
 	/* 일반 회원 조회 */
-	/**
-	 * @param model
-	 * @param currentPage
-	 * @author leeseungwoo
-	 */
-	@GetMapping("normalMember")
-	public void normalMember(Model model, @RequestParam(value = "currentPage", required = false) String currentPage
-			, @RequestParam(value="searchValue", required = false) String sv) {
+	   /**
+	    * @param model
+	    * @param currentPage
+	    * @author leeseungwoo
+	    */
+	   @GetMapping("normalMember")
+	   public void normalMember(Model model, @RequestParam(value = "currentPage", required = false) String currentPage
+	         , @RequestParam(value="searchValue", required = false) String sv) {
 
-		/* ==== 현재 페이지 처리 ==== */
-		int pageNo = 1;
+	      /* ==== 현재 페이지 처리 ==== */
+	      int pageNo = 1;
 
-		System.out.println("currentPage : " + currentPage);
+	      System.out.println("currentPage : " + currentPage);
 
-		if(currentPage != null && !"".equals(currentPage)) {
-			pageNo = Integer.parseInt(currentPage);
-		}
+	      if(currentPage != null && !"".equals(currentPage)) {
+	         pageNo = Integer.parseInt(currentPage);
+	      }
 
-		if(pageNo <= 0) {
-			pageNo = 1;
-		}
+	      if(pageNo <= 0) {
+	         pageNo = 1;
+	      }
 
-		System.out.println(currentPage);
-		System.out.println(pageNo);
+	      System.out.println(currentPage);
+	      System.out.println(pageNo);
 
-		/* ==== 검색 처리 ==== */
-		String searchValue = sv;
-		String searchCondition = "";
+	      /* ==== 검색 처리 ==== */
+	      String searchValue = sv;
+	      String searchCondition = "";
 
-		Map<String, Object> searchMap = new HashMap<>();
+	      Map<String, Object> searchMap = new HashMap<>();
 
-		String memberTypeUser = "user";
+	      String memberTypeUser = "user";
 
-		searchMap.put("memberTypeUser", memberTypeUser);
-		searchMap.put("searchValue", searchValue);
+	      searchMap.put("memberTypeUser", memberTypeUser);
+	      searchMap.put("searchValue", searchValue);
 
-		System.out.println("searchMap : " + searchMap);
+	      System.out.println("searchMap : " + searchMap);
 
-		/* ==== 조건에 맞는 게시물 수 처리 ==== */
+	      /* ==== 조건에 맞는 게시물 수 처리 ==== */
 
-		int totalCount = managerService.selectUserTotalCount(searchMap);
-		
-		System.out.println("totalInquiryBoardCount : " + totalCount);
+	      int totalCount = managerService.selectUserTotalCount(searchMap);
+	      
+	      System.out.println("totalInquiryBoardCount : " + totalCount);
 
-		int limit = 10;
-		int buttonAmount = 10;
+	      int limit = 10;
+	      int buttonAmount = 10;
 
-		Pagination pagination = null;
+	      Pagination pagination = null;
 
-		/* ==== 검색과 selectOption 고르기 ==== */
-		if(searchValue != null && !"".equals(searchValue)) {
-			pagination = Pagination.getPagination(pageNo, totalCount, limit, buttonAmount, searchCondition, searchValue);
-		} else {
-			pagination = Pagination.getPagination(pageNo, totalCount, limit, buttonAmount);
-		}
+	      /* ==== 검색과 selectOption 고르기 ==== */
+	      if(searchValue != null && !"".equals(searchValue)) {
+	         pagination = Pagination.getPagination(pageNo, totalCount, limit, buttonAmount, searchCondition, searchValue);
+	      } else {
+	         pagination = Pagination.getPagination(pageNo, totalCount, limit, buttonAmount);
+	      }
 
-		pagination.setSearchCondition("user");
+	      pagination.setSearchCondition("user");
 
-		System.out.println("pagination : " + pagination);
-		
-		List<MemberDTO> normalMemberList = managerService.selectUser(pagination);
-		System.out.println("리스트 확인 : " + normalMemberList);
-		
-		List<Integer> testList = null;
-		for(MemberDTO mb : normalMemberList) {
-			int value = 0;
-			List<Integer> list = mb.getUser().getTotalPrice();
-			
-			for(int i : list) {
-				value += i;
-			}
-			testList = new ArrayList<>();
-			testList.add(value);
-			
-			mb.getUser().setTotalPrice(testList);
-		}
-		
-		if(normalMemberList != null) {
-			model.addAttribute("pagination", pagination);
-			model.addAttribute("normalMemberList", normalMemberList);
-		} else {
-			System.out.println("조회실패");
-		}
+	      System.out.println("pagination : " + pagination);
+	      
+	      List<MemberDTO> normalMemberList = managerService.selectUser(pagination);
+	      System.out.println("리스트 확인 : " + normalMemberList);
+	      
+//	      List<Integer> testList = null;
+//	      for(MemberDTO mb : normalMemberList) {
+//	         int value = 0;
+//	         List<Integer> list = mb.getUser().getTotalPrice();
+//	         
+//	         for(int i : list) {
+//	            value += i;
+//	         }
+//	         testList = new ArrayList<>();
+//	         testList.add(value);
+//	         
+//	         mb.getUser().setTotalPrice(testList);
+//	      }
+	      
+	      if(normalMemberList != null) {
+	         model.addAttribute("pagination", pagination);
+	         model.addAttribute("normalMemberList", normalMemberList);
+	      } else {
+	         System.out.println("조회실패");
+	      }
 
-	}
+	   }
 
-	
-//	@PostMapping(value = "totalPrice", produces = "application/json; charset=UTF-8")
-//	@ResponseBody
-//	public int totalPrice(@RequestParam("getMemCode") int memCode) {
-//		
-//		System.out.println(memCode);
-//		List<OrderDTO> totalPriceList = managerService.selectTotalPrice(memCode);
-//		System.out.println("totalPriceList : " + totalPriceList);
-//		System.out.println(totalPriceList.size());
-//		
-//		List<Integer> testList = null;
-//		int value = 0;
-//		for(int i = 0; i < totalPriceList.size(); i++) {
-//			
-//			OrderDTO result = totalPriceList.get(i);
-//			value += result.getTotalPrice();
-//		}
-//		
-//		System.out.println("value : " + value);
-//
-//		
-//		return value;
-//	}
-	
-	/* 회원삭제 */
-	/**
-	 * @param deleteMember
-	 * @return
-	 * @author leeseungwoo
-	 */
-	@PostMapping("deleteMember")
-	public String deleteMember(@RequestParam("chkMember") int[] deleteMember) {
+	   
+	   /**
+	    * 총 주문금액 조회
+	    * @param memCode
+	    * @return
+	    * @author leeseungwoo
+	    */
+	   @PostMapping(value = "totalPrice", produces = "application/json; charset=UTF-8")
+	   @ResponseBody
+	   public int totalPrice(@RequestParam("getMemCode") int memCode) {
+	      
+	      System.out.println(memCode);
+	      List<OrderDTO> totalPriceList = managerService.selectTotalPrice(memCode);
+	      System.out.println("totalPriceList : " + totalPriceList);
+	      System.out.println(totalPriceList.size());
+	      
+	      List<Integer> testList = null;
+	      int value = 0;
+	      for(int i = 0; i < totalPriceList.size(); i++) {
+	         
+	         OrderDTO result = totalPriceList.get(i);
+	         value += result.getTotalPrice();
+	      }
+	      
+	      System.out.println("value : " + value);
 
-		List<Integer> deleteMemberList = new ArrayList<>();
+	      
+	      return value;
+	   }
+	   
+	   /* 회원삭제 */
+	   /**
+	    * @param deleteMember
+	    * @return
+	    * @author leeseungwoo
+	    */
+	   @PostMapping("deleteMember")
+	   public String deleteMember(@RequestParam("chkMember") int[] deleteMember) {
 
-		for(int i = 0; i < deleteMember.length; i++) {
-			deleteMemberList.add(deleteMember[i]);
-		}
+	      List<Integer> deleteMemberList = new ArrayList<>();
 
-		managerService.deleteMembers(deleteMemberList);
+	      for(int i = 0; i < deleteMember.length; i++) {
+	         deleteMemberList.add(deleteMember[i]);
+	      }
 
-		return "redirect:normalMember";
-	}
+	      managerService.deleteMembers(deleteMemberList);
+
+	      return "redirect:normalMember";
+	   }
 
 	/* 회원블랙등록 */
 	/**
@@ -523,8 +521,6 @@ public class ManagerController {
 			pagination = Pagination.getPagination(pageNo, totalCount, limit, buttonAmount, "all", null);
 		}
 
-		//		System.out.println("pagination : " + pagination);
-
 		/* 공지사항 리스트 조회 */
 		List<PostDTO> noticeList = managerService.selectNoticeList(pagination);
 
@@ -812,7 +808,6 @@ public class ManagerController {
 	 */
 	@PostMapping(value = "oftenQuestionWrite")
 	public String oftenQuestionWrite(@ModelAttribute PostDTO post, Model model) {
-		System.out.println("포스트 : " + post);
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("boardCode", post.getBoardCode());
@@ -973,14 +968,23 @@ public class ManagerController {
 		registInfo.put("ansContent",ansContent);
 		registInfo.put("postNo",postNo);
 
+		/* 파일이름이 비어있지 않으면 리스트에 바로 넣어주고, 비어있으면 Null값 넣어줌 */
 		if(fileName1.getOriginalFilename() != "") {
 			imgFiles.add(fileName1);
+		} else {
+			imgFiles.add(null);
 		}
+
 		if(fileName2.getOriginalFilename() != "") {
 			imgFiles.add(fileName2);
+		} else {
+			imgFiles.add(null);
 		}
+
 		if(fileName3.getOriginalFilename() != "") {
 			imgFiles.add(fileName3);
+		} else {
+			imgFiles.add(null);
 		}
 
 		System.out.println("이미지 체크 : " + imgFiles);
@@ -993,39 +997,49 @@ public class ManagerController {
 			mkdir.mkdirs();
 		}
 
+		/* xml에 등록할 파일 맵 */
 		Map<String, Object> registfile = new HashMap<>();
 		registfile.put("postNo",postNo);
 
 		int result = 0;
+		/* 파일이 비어있지않으면 파일 등록하러가기~ */
 		if(!imgFiles.isEmpty()) {
 
 			for(int i = 0; i < imgFiles.size(); i++) {
 
-				System.out.println(i);
-				String originFileName = imgFiles.get(i).getOriginalFilename();
-				String ext = originFileName.substring(originFileName.indexOf("."));
-				String savedName = UUID.randomUUID().toString().replace("-", "") + ext;
+				if(imgFiles.get(i) != null) {
 
-				try {
-					imgFiles.get(i).transferTo(new File(filePath + "/" + savedName));
+					String originFileName = imgFiles.get(i).getOriginalFilename();
+					String ext = originFileName.substring(originFileName.indexOf("."));
+					String savedName = UUID.randomUUID().toString().replace("-", "") + ext;
 
-					String fileName = "resources/uploadFiles/" + savedName;
+					try {
+						imgFiles.get(i).transferTo(new File(filePath + "/" + savedName));
 
-					registfile.put("fileName", fileName);
+						String fileName = "resources/uploadFiles/" + savedName;
+
+						registfile.put("fileName", fileName);
+
+						result = managerService.registBusinessFile(registfile);
+
+
+					} catch (IllegalStateException | IOException e) {
+
+						new File(filePath + "/" + savedName).delete();
+
+						e.printStackTrace();
+					}
+				} else {
+
+					registfile.put("fileName", "none");
 
 					result = managerService.registBusinessFile(registfile);
-
-
-				} catch (IllegalStateException | IOException e) {
-
-					new File(filePath + "/" + savedName).delete();
-
-					e.printStackTrace();
 				}
 
 			}
 		}
 
+		/* 답변 내용 등록하러 가기~ */
 		int result2 = managerService.registBusinessAnswer(registInfo);
 
 		if(result > 0 && result2 > 0) {
@@ -1058,7 +1072,7 @@ public class ManagerController {
 		model.addAttribute("answerFileList", answerFileList);
 
 	}
-	
+
 	/**
 	 * @author junheekim
 	 * @category 사업자 - 1:1 질문 답변 수정(테스트 X)
@@ -1066,20 +1080,33 @@ public class ManagerController {
 	@PostMapping("updateBusinessInquiry")
 	public String updateBusinessInquiry(HttpServletRequest request, HttpSession session, @RequestParam(value = "postNo", required = false) int postNo, @RequestParam(value = "ansContent", required = false) String ansContent, RedirectAttributes ra
 			, @RequestParam(value = "fileName1", required = false) MultipartFile fileName1, @RequestParam(value = "fileName2", required = false) MultipartFile fileName2, @RequestParam(value = "fileName3", required = false) MultipartFile fileName3
-			, @RequestParam(value = "fileCode1", defaultValue = "0") int fileCode1, @RequestParam(value = "fileCode2", defaultValue = "0") int fileCode2, @RequestParam(value = "fileCode3", defaultValue = "0") int fileCode3) {
+			, @RequestParam(value = "fileCode1", defaultValue = "0") int fileCode1, @RequestParam(value = "fileCode2", defaultValue = "0") int fileCode2, @RequestParam(value = "fileCode3", defaultValue = "0") int fileCode3
+			, @RequestParam(value = "filePath1", defaultValue = "") String filePath1, @RequestParam(value = "fileCode2", defaultValue = "") String filePath2, @RequestParam(value = "fileCode2", defaultValue = "") String filePath3) {
 
+		/* 업데이트할 정보들 맵에 저장 */
 		Map<String, Object> updateInfo = new HashMap<>();
-		List<MultipartFile> imgFiles = new ArrayList<MultipartFile>();
 		updateInfo.put("ansContent",ansContent);
 		updateInfo.put("postNo",postNo);
 
+		/* 리스트에 이미지 파일 넣기 */
+		List<MultipartFile> imgFiles = new ArrayList<MultipartFile>();
 		imgFiles.add(fileName1);
 		imgFiles.add(fileName2);
 		imgFiles.add(fileName3);
 
-		System.out.println("이미지 체크 : " + imgFiles);
-		System.out.println("코드 1 : " + fileCode1 + "코드 2 : " + fileCode2 +"코드 3 : " + fileCode3);
+		/* 만약 비어있는 경우 null 값으로 채워주기 */
+		for(MultipartFile m : imgFiles) {
+			if(m.isEmpty()) {
+				m = null;
 
+			}
+		}
+
+		/* 들어온 이미지 리스트 체크, 코드 체크 */
+		System.out.println("이미지 체크 : " + imgFiles);
+		System.out.println("코드 1 : " + fileCode1 + ", 코드 2 : " + fileCode2 +", 코드 3 : " + fileCode3);
+
+		/* 저장할 파일 루트, 폴더 설정 */
 		String root = request.getSession().getServletContext().getRealPath("resources");
 
 		String filePath = root + "/uploadFiles";
@@ -1089,41 +1116,81 @@ public class ManagerController {
 			mkdir.mkdirs();
 		}
 
-
+		/* 파일이 비어져있어도 넘겨줍시다. */
 		int result = 0;
 		if(!imgFiles.isEmpty()) {
-			
+
 			for(int i = 0; i < 3; i++) {
 				Map<String, Object> updateFile = new HashMap<>();
 				updateFile.put("postNo",postNo);
-				
-				System.out.println(imgFiles.get(i).getOriginalFilename() != "" && imgFiles.get(i).getOriginalFilename() != null);
-				
-				if(imgFiles.get(i).getOriginalFilename() != "" && imgFiles.get(i).getOriginalFilename() != null) {
+
+
+				if(i == 0 && fileCode1 > 0) {
+					System.out.println("첫번째 코드");
+					updateFile.put("fileCode", fileCode1);
+				}else if(i == 1  && fileCode2 > 0) {
+					System.out.println("두번째 코드");
+					updateFile.put("fileCode", fileCode2);
+				}else if(i == 2  && fileCode3 > 0) {
+					System.out.println("세번째 코드");
+					updateFile.put("fileCode", fileCode3);
+				} else {
+					updateFile.putIfAbsent("fileCode", 0);
+				}
+
+				System.out.println("중간 코드 점검 : " + updateFile.get("fileCode"));
+
+				System.out.println("문제의 원인 : " + imgFiles.get(i));
+				System.out.println("문제의 원인 : " + imgFiles.get(i).getOriginalFilename()); //원래 파일이 있던 경우는 null임
+				System.out.println(!filePath1.isEmpty() || !filePath2.isEmpty() || !filePath3.isEmpty());
+				if((!filePath1.isEmpty() || !filePath2.isEmpty() || !filePath3.isEmpty()) && imgFiles.get(i).getOriginalFilename() == "") {
+
+					System.out.println("if문 1 들어옴");
+					String fileName = "";
+					if(i == 0) {
+						fileName = filePath1;
+					} else if(i == 1) {
+						fileName = filePath2;
+					} else if(i == 2) {
+						fileName = filePath3;
+					}
+					
+					updateFile.put("fileName", fileName);
+					
+					System.out.println("문제 내용 : " + updateFile);
+					
+					if(updateFile.get("fileCode").equals(0)) {
+						result = managerService.registBusinessFile(updateFile);
+					} else {
+						result = managerService.updateBusinessFile(updateFile);
+					}
+
+				} else if( imgFiles.get(i) == null ){	
+					
+					System.out.println("if문 들어옴");
+					String fileName = "";
+					updateFile.put("fileName", fileName);
+					
+					System.out.println("문제 내용 : " + updateFile);
+					
+					if(updateFile.get("fileCode").equals(0)) {
+						result = managerService.registBusinessFile(updateFile);
+					} else {
+						result = managerService.updateBusinessFile(updateFile);
+					}
+				} else {
+					System.out.println("else문 들어옴");
 					String originFileName = imgFiles.get(i).getOriginalFilename();
 					String ext = originFileName.substring(originFileName.indexOf("."));
 					String savedName = UUID.randomUUID().toString().replace("-", "") + ext;
 
-						
-					if(i == 0 && fileCode1 > 0) {
-						System.out.println("첫번째 코드");
-						updateFile.put("fileCode", fileCode1);
-					}else if(i == 1  && fileCode2 > 0) {
-						System.out.println("두번째 코드");
-						updateFile.put("fileCode", fileCode2);
-					}else if(i == 2  && fileCode3 > 0) {
-						System.out.println("세번째 코드");
-						updateFile.put("fileCode", fileCode3);
-					} else {
-						updateFile.putIfAbsent("fileCode", 0);
-					}
-					
+
 					try {
 						imgFiles.get(i).transferTo(new File(filePath + "/" + savedName));
-						
 						String fileName = "resources/uploadFiles/" + savedName;
 						updateFile.put("fileName", fileName);
-						
+
+						System.out.println("문제 내용2 : " + updateFile);
 						if(updateFile.get("fileCode").equals(0)) {
 							result = managerService.registBusinessFile(updateFile);
 						} else {
@@ -1131,15 +1198,21 @@ public class ManagerController {
 						}
 
 					} catch (IllegalStateException | IOException e) {
-
+						System.out.println("catch문 들어옴");
 						new File(filePath + "/" + savedName).delete();
-
 						e.printStackTrace();
 					}
-				} 
-			}
+				}
+
+
+
+
+			} 
+		} else if(imgFiles.isEmpty()) {
+
 		}
 
+		/* 답변 업데이트 */
 		int result2 = managerService.updateBusinessAnswer(updateInfo);
 
 		if(result > 0 && result2 > 0) {
@@ -1222,6 +1295,7 @@ public class ManagerController {
 		}
 
 		return "manager/normalInquiry";
+		
 	}
 
 	/**
@@ -1350,7 +1424,7 @@ public class ManagerController {
 		model.addAttribute("answerFileList", answerFileList);
 
 	}
-	
+
 	/* 리뷰 신고 현황 */
 	/**
 	 * @param model
@@ -1672,7 +1746,7 @@ public class ManagerController {
 		return result? "1" : "2";
 	}
 
-	
+
 	/**
 	 * 배너조회
 	 * @param model
@@ -1680,17 +1754,17 @@ public class ManagerController {
 	 */
 	@GetMapping("bannerManage")
 	public void bannerManage(Model model) {
-		
+
 		List<BannerDTO> bannerList = managerService.selectBanner();
 		System.out.println("bannerList : " + bannerList);
-		
+
 		model.addAttribute("bannerList", bannerList);
 	}
-	
+
 	/* 배너추가 페이지 */
 	@GetMapping("bannerAdd")
 	public void bannerAdd() {}
-	
+
 	/**
 	 * 배너추가
 	 * @param banner
@@ -1701,49 +1775,49 @@ public class ManagerController {
 	 */
 	@PostMapping("bannerinsert")
 	public String bannerinsert(@ModelAttribute BannerDTO banner, @RequestParam MultipartFile bnImgs
-							   , HttpServletRequest request) {
+			, HttpServletRequest request) {
 		System.out.println("들어옴");
 		System.out.println("banner : " + banner);
 		Map<String, Object> bnMap = new HashMap<>();
 		bnMap.put("banner", banner);
-		
+
 		String root = request.getSession().getServletContext().getRealPath("resources");
 		String filePath = root + "/uploadFiles";
-		
+
 		File mkdir = new File(filePath);
 		if(!mkdir.exists()) {
 			mkdir.mkdirs();
 		}
-		
+
 		String orginFileName = bnImgs.getOriginalFilename();
 		String ext = orginFileName.substring(orginFileName.indexOf("."));
 		String savedName = UUID.randomUUID().toString().replace("-", "") + ext;
-		
+
 		try {
 			bnImgs.transferTo(new File(filePath + "/" + savedName));
-			
+
 			String fileName = "resources/uploadFiles/" + savedName;
 			System.out.println("fileName : " + fileName);
 			bnMap.put("bnImg", fileName);
-			
-			
+
+
 		} catch (IllegalStateException | IOException e) {
 			new File(filePath + "/" + savedName).delete();	
 			e.printStackTrace();
 		}
-		
+
 		int result = managerService.insertBannerAdd(bnMap);
-		
+
 		if(result > 0) {
 			System.out.println("배너등록성공");
 		} else {
 			System.out.println("배너등록실패");
 			new File(filePath + "/" + savedName).delete();
 		}
-		
+
 		return "redirect:bannerManage";
 	}
-	
+
 	/**
 	 * 배너 수정 페이지
 	 * @param model
@@ -1752,11 +1826,11 @@ public class ManagerController {
 	 */
 	@GetMapping("bannerEditView")
 	public void bannerEditView(Model model, @RequestParam(value = "bnCode", required = false) int bnCode) {
-		
+
 		BannerDTO bannerList = managerService.selectBannerEditView(bnCode);
 		model.addAttribute("bannerList", bannerList);
 	}
-	
+
 	/**
 	 * 배너 수정
 	 * @param banner
@@ -1767,51 +1841,51 @@ public class ManagerController {
 	 */
 	@PostMapping("bannerEdit")
 	public String bannerEdit(@ModelAttribute BannerDTO banner, @RequestParam MultipartFile bnImgs
-			   , HttpServletRequest request) {
-		
+			, HttpServletRequest request) {
+
 		System.out.println("들어옴");
 		System.out.println("banner : " + banner);
 		Map<String, Object> bnMap = new HashMap<>();
 		bnMap.put("banner", banner);
 		System.out.println("bnImgs : " + bnImgs);
-		
+
 		if(!bnImgs.isEmpty()) {
-			
+
 			String root = request.getSession().getServletContext().getRealPath("resources");
 			String filePath = root + "/uploadFiles";
-			
+
 			File mkdir = new File(filePath);
 			if(!mkdir.exists()) {
 				mkdir.mkdirs();
 			}
-			
+
 			String orginFileName = bnImgs.getOriginalFilename();
 			String ext = orginFileName.substring(orginFileName.indexOf("."));
 			String savedName = UUID.randomUUID().toString().replace("-", "") + ext;
-			
+
 			try {
 				bnImgs.transferTo(new File(filePath + "/" + savedName));
-				
+
 				String fileName = "resources/uploadFiles/" + savedName;
 				System.out.println("fileName : " + fileName);
 				bnMap.put("bnImg", fileName);
-				
-				
+
+
 			} catch (IllegalStateException | IOException e) {
 				new File(filePath + "/" + savedName).delete();	
 				e.printStackTrace();
 			}
-			
+
 		}
-		
+
 		int result = managerService.updateBanner(bnMap);
-		
+
 		if(result > 0) {
 			System.out.println("배너수정성공");
 		} else {
 			System.out.println("배너수정실패");
 		}
-		
+
 		return "redirect:bannerManage";
 	}
 
@@ -1824,22 +1898,22 @@ public class ManagerController {
 	@PostMapping(value = "deleteBanner", produces = "text/plain; charset=UTF-8;")
 	@ResponseBody
 	public String deleteBanner(@RequestParam("chkBanner[]") String[] bnCode) {
-		
+
 		List<String> chkBannerList = new ArrayList<>();
 		for(String bc : bnCode) {
 			chkBannerList.add(bc);
 		}
-		
+
 		int result = managerService.deleteBanner(chkBannerList);
 		if(result > 0) {
 			System.out.println("배너 삭제 성공");
 		} else {
 			System.out.println("배너 삭제 실패");
 		}
-		
+
 		return result > 0? "1" : "2";
 	}
-	
+
 	/**
 	 * 사용중인 태그 조회
 	 * 핫 키워드 조회
@@ -2211,258 +2285,201 @@ public class ManagerController {
 	}
 
 	/* 관리자 정산 */
-	/**@author ShinHyungi
-	 * @param model
-	 * @param currentPage
-	 * @param searchValue
-	 * @param startDate
-	 * @param endDate
-	 */
-	@GetMapping("taxAdjustment")
-	public void taxAdjustment(Model model, @RequestParam(value = "currentPage", required = false) String currentPage, @RequestParam(value = "searchValue", required = false) String searchValue
-			, @RequestParam(value = "startDate", required = false) String startDate, @RequestParam(value = "endDate", required = false) String endDate) {
-		/* ==== 현재 페이지 처리 ==== */
-		int pageNo = 1;
-		
-		System.out.println("currentPage : " + currentPage);
-		
-		if(currentPage != null && !"".equals(currentPage)) {
-			pageNo = Integer.parseInt(currentPage);
-		}
-		
-		if(pageNo <= 0) {
-			pageNo = 1;
-		}
-		
-		System.out.println(currentPage);
-		System.out.println(pageNo);
-		
-		Map<String, Object> searchMap = new HashMap<>();
-		searchMap.put("searchValue", searchValue);
-		searchMap.put("startDate", startDate);
-		searchMap.put("endDate", endDate);
-		
-		
-		/* ==== 조건에 맞는 게시물 수 처리 ==== */
-		int totalCount = managerService.selectTaxAdjustTotalCount(searchMap);
-		
-		System.out.println("totalInquiryBoardCount : " + totalCount);
-		
-		int limit = 10;
-		int buttonAmount = 10;
-		
-		Pagination pagination = null;
-		
-		/* ==== 검색과 selectOption 고르기 ==== */
-		if(searchValue != null && !"".equals(searchValue)) {
-			pagination = Pagination.getPagination(pageNo, totalCount, limit, buttonAmount, "", searchValue);
-		} else {
-			pagination = Pagination.getPagination(pageNo, totalCount, limit, buttonAmount);
-		}
-		System.out.println("pagination : " + pagination);
-		
-//		pagination.setSearchCondition(condition);
-		Map<String, Object> map = new HashMap<>();
-		map.put("pagination", pagination);
-		map.put("startDate", startDate);
-		map.put("endDate", endDate);
-		
-		List<TaxAdjustDTO> taxAdjustList = managerService.selectTaxAdjustListList(map);
-		System.out.println("리스트 확인 : " + taxAdjustList);
-		
-		for(TaxAdjustDTO t : taxAdjustList) {
-			t.setMsPrice(t.getMsPrice().replaceAll(",", ""));;
-		}
-		
-		Map<String, String> dateMap = new HashMap<String, String>();;
-		if(startDate != null) {
-			dateMap.put("startDate", startDate);
-			dateMap.put("endDate", endDate);
-		}
-		
-		if(taxAdjustList != null) {
-			model.addAttribute("pagination", pagination);
-			model.addAttribute("taxAdjustList", taxAdjustList);
-			model.addAttribute("dateMap", dateMap);
-		} else {
-			System.out.println("조회실패");
-		}
-	}
-	
-	/* 중개이용료 리스트 */
-	@GetMapping("taxDetailAdjustment")
-	public void taxDetailAdjustment() {}
-	
-	@PostMapping(value = "excel", produces = "text/plain; charset=UTF-8;")
-	@ResponseBody
-	public String excel(@RequestParam("codeList[]") String[] codeList) {
-		
-		String msg = "";
-		List<String> list = new ArrayList<String>();
-		for(String b : codeList) {
-			list.add(b);
-		}
-		
-		List<TaxAdjustDTO> taxList = managerService.selectTaxList(list);
-		System.out.println(taxList);
-		System.out.println(taxList.get(0).getStoreNo());
-		
-		// 엑셀 변환
-		//.xls 확장자 지원
-		HSSFWorkbook wb = null;
-		HSSFSheet sheet = null;
-		Row row = null;
-		Cell cell = null;
-		
-		//.xlsx 확장자 지원
-		XSSFWorkbook xssfWb = null; // .xlsx
-		XSSFSheet xssfSheet = null; // .xlsx
-		XSSFRow xssfRow = null; // .xlsx
-		XSSFCell xssfCell = null;// .xlsx
-		
-		try {
-			int rowNo = 0; // 행 갯수 
-			// 워크북 생성
-			xssfWb = new XSSFWorkbook();
-			xssfSheet = xssfWb.createSheet("전자세금계산서"); // 워크시트 이름
-			
-			//헤더용 폰트 스타일
-			XSSFFont font = xssfWb.createFont();
-			font.setFontName(HSSFFont.FONT_ARIAL); //폰트스타일
-			font.setFontHeightInPoints((short)14); //폰트크기
-			font.setBold(true); //Bold 유무
-			
-			//테이블 타이틀 스타일
-			CellStyle cellStyle_Title = xssfWb.createCellStyle();
-			
-			// 중간 컬럼
-			xssfSheet.setColumnWidth(3, (xssfSheet.getColumnWidth(3))+(short)2048); 
-			xssfSheet.setColumnWidth(4, (xssfSheet.getColumnWidth(4))+(short)2048);
-			xssfSheet.setColumnWidth(5, (xssfSheet.getColumnWidth(5))+(short)2048);
-			xssfSheet.setColumnWidth(8, (xssfSheet.getColumnWidth(8))+(short)2048);
-			xssfSheet.setColumnWidth(9, (xssfSheet.getColumnWidth(9))+(short)2048);
-			xssfSheet.setColumnWidth(12, (xssfSheet.getColumnWidth(12))+(short)2048);
-			
-			// 큰 컬럼
-			xssfSheet.setColumnWidth(1, (xssfSheet.getColumnWidth(1))+(short)4096); 
-			xssfSheet.setColumnWidth(7, (xssfSheet.getColumnWidth(7))+(short)4096); 
-			xssfSheet.setColumnWidth(10, (xssfSheet.getColumnWidth(10))+(short)4096); 
-			xssfSheet.setColumnWidth(11, (xssfSheet.getColumnWidth(11))+(short)4096); 
-			
-			cellStyle_Title.setFont(font); // cellStle에 font를 적용
-			cellStyle_Title.setAlignment(HorizontalAlignment.CENTER); // 정렬
-			
-			//셀병합
-			xssfSheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 8)); //첫행, 마지막행, 첫열, 마지막열( 0번째 행의 0~8번째 컬럼을 병합한다)
-			//타이틀 생성
-			xssfRow = xssfSheet.createRow(rowNo++); //행 객체 추가
-			xssfCell = xssfRow.createCell((short) 0); // 추가한 행에 셀 객체 추가
-			xssfCell.setCellStyle(cellStyle_Title); // 셀에 스타일 지정
-			xssfCell.setCellValue("전자세금계산서"); // 데이터 입력
-			
-			xssfRow = xssfSheet.createRow(rowNo++);  // 빈행 추가
-			
-			CellStyle cellStyle_Body = xssfWb.createCellStyle(); 
-			cellStyle_Body.setAlignment(HorizontalAlignment.CENTER); 
+	   /**@author ShinHyungi
+	    * @param model
+	    * @param currentPage
+	    * @param searchValue
+	    * @param startDate
+	    * @param endDate
+	    */
+	   @GetMapping("taxAdjustment")
+	   public void taxAdjustment(Model model, @RequestParam(value = "currentPage", required = false) String currentPage, @RequestParam(value = "searchValue", required = false) String searchValue
+	         , @RequestParam(value = "startDate", required = false) String startDate, @RequestParam(value = "endDate", required = false) String endDate) {
+	      /* ==== 현재 페이지 처리 ==== */
+	      int pageNo = 1;
 
-			//테이블 스타일 설정
-			CellStyle cellStyle_Table_Center = xssfWb.createCellStyle();
-			cellStyle_Table_Center.setBorderTop(BorderStyle.THIN); //테두리 위쪽
-			cellStyle_Table_Center.setBorderBottom(BorderStyle.THIN); //테두리 아래쪽
-			cellStyle_Table_Center.setBorderLeft(BorderStyle.THIN); //테두리 왼쪽
-			cellStyle_Table_Center.setBorderRight(BorderStyle.THIN); //테두리 오른쪽
-			cellStyle_Table_Center.setAlignment(HorizontalAlignment.CENTER);
-			cellStyle_Table_Center.setFillForegroundColor(HSSFColor.AQUA.index);
-			
-			xssfRow = xssfSheet.createRow(rowNo++);
-			xssfCell = xssfRow.createCell((short) 0);
-			xssfCell.setCellStyle(cellStyle_Table_Center);
-			xssfCell.setCellValue("전자(세금)계산서 종류"
-					+ "\n\r(01 일반, 02 명세용)");
-			xssfCell = xssfRow.createCell((short) 1);
-			xssfCell.setCellStyle(cellStyle_Table_Center);
-			xssfCell.setCellValue("작성일자");
-			xssfCell = xssfRow.createCell((short) 2);
-			xssfCell.setCellStyle(cellStyle_Table_Center);
-			xssfCell.setCellValue("공급자 등록번호"
-					+ "\n\r('-' 없이 입력)");
-			xssfCell = xssfRow.createCell((short) 3);
-			xssfCell.setCellStyle(cellStyle_Table_Center);
-			xssfCell.setCellValue("공급자"
-					+ "\n\r종사업장번호");
-			xssfCell = xssfRow.createCell((short) 4);
-			xssfCell.setCellStyle(cellStyle_Table_Center);
-			xssfCell.setCellValue("공급자 상호");
-			xssfCell = xssfRow.createCell((short) 5);
-			xssfCell.setCellStyle(cellStyle_Table_Center);
-			xssfCell.setCellValue("공급자 성명");
-			xssfCell = xssfRow.createCell((short) 6);
-			xssfCell.setCellStyle(cellStyle_Table_Center);
-			xssfCell.setCellValue("공급자 사업장주소");
-			xssfCell = xssfRow.createCell((short) 7);
-			xssfCell.setCellStyle(cellStyle_Table_Center);
-			xssfCell.setCellValue("공급자 업태");
-			xssfCell = xssfRow.createCell((short) 8);
-			xssfCell.setCellStyle(cellStyle_Table_Center);
-			xssfCell.setCellValue("공급자 이메일");
-			xssfCell = xssfRow.createCell((short) 8);
-			xssfCell.setCellStyle(cellStyle_Table_Center);
-			xssfCell.setCellValue("공급받는자 등록번호"
-					+ "\n\r('-'없이 입력)");
-			xssfCell = xssfRow.createCell((short) 8);
-			xssfCell.setCellStyle(cellStyle_Table_Center);
-			xssfCell.setCellValue("공급받는자"
-					+ "\n\r종사업장번호");
-			
-			// 로우 생성
-			SimpleDateFormat sf = new SimpleDateFormat("yy/MM/dd");
-			Date date = new Date(System.currentTimeMillis());
-			String today = sf.format(date);
-			for(int i = 0; i < taxList.size(); i++) {
-				xssfSheet.addMergedRegion(new CellRangeAddress(rowNo, rowNo, 0, 1)); //첫행,마지막행,첫열,마지막열
-				xssfRow = xssfSheet.createRow(rowNo++); //헤더 01
-				xssfCell = xssfRow.createCell((short) 1);
-				xssfCell.setCellStyle(cellStyle_Body);
-				xssfCell.setCellValue(today);
-				xssfCell = xssfRow.createCell((short) 2);
-				xssfCell.setCellStyle(cellStyle_Body);
-				xssfCell.setCellValue(taxList.get(i).getStoreNo());
-				xssfCell = xssfRow.createCell((short) 4);
-				xssfCell.setCellStyle(cellStyle_Body);
-				xssfCell.setCellValue(taxList.get(i).getStoreName());
-				xssfCell = xssfRow.createCell((short) 5);
-				xssfCell.setCellStyle(cellStyle_Body);
-				xssfCell.setCellValue(taxList.get(i).getCeoName());
-				xssfCell = xssfRow.createCell((short) 6);
-				xssfCell.setCellStyle(cellStyle_Body);
-				xssfCell.setCellValue(taxList.get(i).getAddress());
-				xssfCell = xssfRow.createCell((short) 8);
-				xssfCell.setCellStyle(cellStyle_Body);
-				xssfCell.setCellValue(taxList.get(i).getMsType());
-				xssfCell = xssfRow.createCell((short) 9);
-				xssfCell.setCellStyle(cellStyle_Body);
-				xssfCell.setCellValue(taxList.get(i).getEmail());
-			}
-			
-			
-			String localFile = "C:\\download\\" + "전자세금계산서_" + today + ".xlsx";
-			
-			File file = new File(localFile);
-			FileOutputStream fos = null;
-			fos = new FileOutputStream(file);
-			xssfWb.write(fos);
+	      System.out.println("currentPage : " + currentPage);
 
-			if (xssfWb != null)	xssfWb.close();
-			if (fos != null) fos.close();
-			
-			//ctx.put("FILENAME", "입고상세출력_"+ mapList.get(0).get("PRINT_DATE"));
-			//if(file != null) file.deleteOnExit();
-		} catch(Exception e) {
-        	
-		} finally {
-			
-	    }
-		
-		return msg;
-	}
+	      if(currentPage != null && !"".equals(currentPage)) {
+	         pageNo = Integer.parseInt(currentPage);
+	      }
+
+	      if(pageNo <= 0) {
+	         pageNo = 1;
+	      }
+
+	      System.out.println(currentPage);
+	      System.out.println(pageNo);
+
+	      Map<String, Object> searchMap = new HashMap<>();
+	      searchMap.put("searchValue", searchValue);
+	      searchMap.put("startDate", startDate);
+	      searchMap.put("endDate", endDate);
+
+
+	      /* ==== 조건에 맞는 게시물 수 처리 ==== */
+	      int totalCount = managerService.selectTaxAdjustTotalCount(searchMap);
+
+	      System.out.println("totalInquiryBoardCount : " + totalCount);
+
+	      int limit = 10;
+	      int buttonAmount = 10;
+
+	      Pagination pagination = null;
+
+	      /* ==== 검색과 selectOption 고르기 ==== */
+	      if(searchValue != null && !"".equals(searchValue)) {
+	         pagination = Pagination.getPagination(pageNo, totalCount, limit, buttonAmount, "", searchValue);
+	      } else {
+	         pagination = Pagination.getPagination(pageNo, totalCount, limit, buttonAmount);
+	      }
+	      System.out.println("pagination : " + pagination);
+
+	      Map<String, Object> map = new HashMap<>();
+	      map.put("pagination", pagination);
+	      map.put("startDate", startDate);
+	      map.put("endDate", endDate);
+
+	      List<TaxAdjustDTO> taxAdjustList = managerService.selectTaxAdjustListList(map);
+	      System.out.println("리스트 확인 : " + taxAdjustList);
+
+	      for(TaxAdjustDTO t : taxAdjustList) {
+	         t.setMsPrice(t.getMsPrice().replaceAll(",", ""));;
+	      }
+
+	      Map<String, String> dateMap = new HashMap<String, String>();;
+	      if(startDate != null) {
+	         dateMap.put("startDate", startDate);
+	         dateMap.put("endDate", endDate);
+	      }
+
+	      if(taxAdjustList != null) {
+	         model.addAttribute("pagination", pagination);
+	         model.addAttribute("taxAdjustList", taxAdjustList);
+	         model.addAttribute("dateMap", dateMap);
+	      } else {
+	         System.out.println("조회실패");
+	      }
+	   }
+
+	   /* 중개이용료 리스트 */
+	   @GetMapping("taxDetailAdjustment")
+	   public void taxDetailAdjustment() {}
+
+	   @PostMapping(value = "excel", produces = "text/plain; charset=UTF-8;")
+	   @ResponseBody
+	   public String excel(@RequestParam("codeList[]") String[] codeList) {
+
+	      String msg = "";
+	      List<String> list = new ArrayList<String>();
+	      for(String b : codeList) {
+	         list.add(b);
+	      }
+
+	      List<TaxAdjustDTO> taxList = managerService.selectTaxList(list);
+	      System.out.println(taxList);
+	      XSSFRow row = null;
+	      XSSFCell cell = null;
+
+	      String [] sKey = {"전자 세금계산서 종류(01 일반, 02열세율)", "작성일자", "공급자 등록번호", "공급자 종사업자번호", 
+	            "공급자상호", "공급자 성명", "공급자 사업장 주소", "공급자 업태", "공급자 종목",
+	            "공급자 이메일", "공급받는자 등록번호", "공급받는자 종사업장번호", "공급가","세액","합계급액","영수/청구","품목명"};
+
+	      Date date = new Date(System.currentTimeMillis());
+	      SimpleDateFormat sf = new SimpleDateFormat("yyyy.MM.dd");
+	      String today = sf.format(date);
+	      
+	      XSSFWorkbook workBook = new XSSFWorkbook();
+
+	      XSSFSheet sheet = workBook.createSheet("전자 세금 계산서");
+	      // 중간 컬럼
+	        sheet.setColumnWidth(1, (sheet.getColumnWidth(1))+(short)2048); 
+	        sheet.setColumnWidth(3, (sheet.getColumnWidth(3))+(short)3052); 
+	        sheet.setColumnWidth(4, (sheet.getColumnWidth(4))+(short)2048);
+	        sheet.setColumnWidth(5, (sheet.getColumnWidth(5))+(short)2048);
+	        sheet.setColumnWidth(6, (sheet.getColumnWidth(6))+(short)3052);
+	        sheet.setColumnWidth(7, (sheet.getColumnWidth(7))+(short)2048);
+	        sheet.setColumnWidth(8, (sheet.getColumnWidth(8))+(short)2048);
+	        sheet.setColumnWidth(9, (sheet.getColumnWidth(9))+(short)2048);
+	        sheet.setColumnWidth(10, (sheet.getColumnWidth(10))+(short)3052);
+	        sheet.setColumnWidth(11, (sheet.getColumnWidth(11))+(short)3500);
+	        sheet.setColumnWidth(12, (sheet.getColumnWidth(12))+(short)2048);
+	        
+	        // 큰 컬럼
+	        sheet.setColumnWidth(2, (sheet.getColumnWidth(2))+(short)4096);
+	        sheet.setColumnWidth(9, (sheet.getColumnWidth(9))+(short)4096);
+	      
+	      XSSFCellStyle cellStyle_Table_Center = workBook.createCellStyle();
+	      cellStyle_Table_Center.setBorderTop(BorderStyle.THIN); //테두리 위쪽
+	      cellStyle_Table_Center.setBorderBottom(BorderStyle.THIN); //테두리 아래쪽
+	      cellStyle_Table_Center.setBorderLeft(BorderStyle.THIN); //테두리 왼쪽
+	      cellStyle_Table_Center.setBorderRight(BorderStyle.THIN); //테두리 오른쪽
+	      cellStyle_Table_Center.setAlignment(HorizontalAlignment.CENTER);
+	      cellStyle_Table_Center.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
+	      cellStyle_Table_Center.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+	      // 1.row에 시트를 생성
+	      row = sheet.createRow(0);
+	      for(int i = 0; i < sKey.length; i++) {
+	         // 2.생성된 Row에 Cell생성
+	         cell = row.createCell(i);
+	         cell.setCellStyle(cellStyle_Table_Center);
+	         cell.setCellValue(sKey[i]);
+	      }
+
+	      if( taxList.isEmpty() == false && taxList.size() > 0 ){
+
+	         for(int i = 0; i < taxList.size(); i++){
+
+	            // 1.row에 시트를 생성
+	            row = sheet.createRow(i + 1);
+
+	            // 2.생성된 Row에 Cell생성
+	            cell = row.createCell(0);
+	            cell.setCellValue("01");
+	            cell = row.createCell(1);
+	            cell.setCellValue(today);
+	            cell = row.createCell(2);
+	            cell.setCellValue(taxList.get(i).getStoreNo());
+	            cell = row.createCell(4);
+	            cell.setCellValue(taxList.get(i).getStoreName());
+	            cell = row.createCell(5);
+	            cell.setCellValue(taxList.get(i).getCeoName());
+	            cell = row.createCell(6);
+	            cell.setCellValue(taxList.get(i).getAddress());
+	            cell = row.createCell(9);
+	            cell.setCellValue(taxList.get(i).getEmail());
+	            cell = row.createCell(12);
+	            cell.setCellValue(Integer.parseInt(taxList.get(i).getMsPrice().replaceAll(",", "")) * 0.9);
+	            cell = row.createCell(13);
+	            cell.setCellValue(Integer.parseInt(taxList.get(i).getMsPrice().replaceAll(",", "")) * 0.1);
+	            cell = row.createCell(14);
+	            cell.setCellValue(Integer.parseInt(taxList.get(i).getMsPrice().replaceAll(",", "")));
+	            cell = row.createCell(15);
+	            cell.setCellValue("영수");
+	         }
+	      }
+	      
+	      String filePath = "C:\\download\\";
+	      
+	      File mkdir = new File(filePath);
+	      if(!mkdir.exists()) {
+	         mkdir.mkdirs();
+	      }
+
+	      FileOutputStream fileOutPut;
+	      try {
+	         fileOutPut = new FileOutputStream("C:\\Download\\전자세금_" + today + "_" + taxList.hashCode() + ".xlsx");
+	         // 4.데이터까지 Add된 파일을 쓴다.
+	         workBook.write(fileOutPut);
+	         // 5. fileOutPut 닫아준다.
+	         fileOutPut.close();
+	         msg = "success";
+	      } catch (IOException e) {
+	         e.printStackTrace();
+	         msg = "fail";
+	         new File("C:\\Download\\전자세금_" + today + taxList.hashCode() + ".xlsx").delete();
+	      }
+
+	      return msg;
+	   }
 }

@@ -132,10 +132,10 @@
 	 		} else if((document.location.href).includes("startDate")) {
 	 			location.href = document.location.pathname + "?searchValue=" + searchValue + searchText;
 		    } else {
-	 			location.href = document.location.href + "&searchValue=" + searchValue;
+	 			location.href = document.location.href + "?searchValue=" + searchValue;
 	 		}
 		  }
-		}
+		
 		
 		
 	  	/* $(".searchbutton").on('click',function(){
